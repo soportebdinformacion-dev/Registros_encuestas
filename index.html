@@ -349,73 +349,84 @@
     }
 
     document.getElementById('formEncuesta').onsubmit = async (e) => {
-        e.preventDefault();
-        const registro = {
-            tipoReg: document.getElementById('tipoRegistro').value,
-            dni: document.getElementById('dni').value,
-            nom: document.getElementById('nombres').value,
-            sex: document.getElementById('sexo').value,
-            eda: document.getElementById('edad').value,
-            cel: document.getElementById('celular').value,
-            fun: document.getElementById('fundo').value,
-            are: document.getElementById('area').value,
-            car: document.getElementById('cargo').value,
-            fIng: document.getElementById('fechaIngreso').value,
-            tipT: document.getElementById('tipoTrabajador').value,
-            modlab: document.getElementById('modulo_lab').value,
-            varieds: document.getElementById('variedad_fruta').value,
-            sup: document.getElementById('supervisor').value,
-            herr: document.getElementById('herramientas').value,
-            agu: document.getElementById('agua').value,
-            fru: document.getElementById('fruta').value,
-            falt: document.getElementById('faltas_resp').value,
-            regre: document.getElementById('regreso_trab').value,
-            sient: document.getElementById('siente_hoy').value,
-            prob: document.getElementById('problemas').value,
-            obs: document.getElementById('observaciones').value,
-            synchronized: 0
-        };
-
-        await db.registros.add(registro);
-        alert(navigator.onLine ? "✅ Registro enviado." : "⚠️ Guardado localmente.");
-        if (navigator.onLine) enviarASheets();
-        document.getElementById('formEncuesta').reset();
+    e.preventDefault();
+    
+    // CORRECCIÓN: Aseguramos que los IDs coincidan exactamente con el HTML
+    const registro = {
+        tipoReg: document.getElementById('tipoRegistro').value,
+        dni: document.getElementById('dni').value,
+        nom: document.getElementById('nombres').value,
+        sex: document.getElementById('sexo').value,
+        eda: document.getElementById('edad').value,
+        cel: document.getElementById('celular').value,
+        fun: document.getElementById('fundo').value,
+        are: document.getElementById('area').value,
+        car: document.getElementById('cargo').value,
+        fIng: document.getElementById('fechaIngreso').value,
+        tipT: document.getElementById('tipoTrabajador').value,
+        modlab: document.getElementById('modulo_lab').value,
+        varieds: document.getElementById('variedads').value, // ID corregido de 'variedad_fruta' a 'variedads'
+        sup: document.getElementById('supervisor').value,
+        herr: document.getElementById('herramientas').value,
+        agu: document.getElementById('agua').value,
+        fru: document.getElementById('fruta').value,
+        falt: document.getElementById('faltas_resp').value,
+        regre: document.getElementById('regreso_trab').value,
+        sient: document.getElementById('siente_hoy').value,
+        prob: document.getElementById('problemas').value,
+        obs: document.getElementById('observaciones').value,
+        synchronized: 0
     };
 
-    async function enviarASheets() {
-        if(!navigator.onLine) return;
-        const pendientes = await db.registros.where('synchronized').equals(0).toArray();
-        for(let r of pendientes) {
-            const fd = new URLSearchParams();
-            fd.append("tipoReg", r.tipoReg);
-            fd.append("dni", r.dni);
-            fd.append("nombres", r.nom);
-            fd.append("sexo", r.sex);
-            fd.append("edad", r.eda);
-            fd.append("celular", r.cel);
-            fd.append("fundo", r.fun);
-            fd.append("area", r.are);
-            fd.append("cargo", r.car);
-            fd.append("fIngreso", r.fIng);
-            fd.append("tipoT", r.tipT);
-            fd.append("modulo_labo", r.modlab);
-            fd.append("variedad_fruta", r.varied);
-            fd.append("supervisor", r.sup);
-            fd.append("herramientas", r.herr);
-            fd.append("agua", r.agu);
-            fd.append("fruta", r.fru);
-            fd.append("faltas_respe", r.falt);
-            fd.append("regreso_traba", r.regre);
-            fd.append("sientehoy", r.sient);
-            fd.append("problemas", r.prob);
-            fd.append("observaciones", r.obs);
+    await db.registros.add(registro);
+    alert(navigator.onLine ? "✅ Registro enviado." : "⚠️ Guardado localmente.");
+    if (navigator.onLine) enviarASheets();
+    document.getElementById('formEncuesta').reset();
+};
 
-            try {
-                await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
-                await db.registros.update(r.id, { synchronized: 1 });
-            } catch(e) { console.error(e); }
+async function enviarASheets() {
+    if(!navigator.onLine) return;
+    const pendientes = await db.registros.where('synchronized').equals(0).toArray();
+    
+    for(let r of pendientes) {
+        const fd = new URLSearchParams();
+        fd.append("tipoReg", r.tipoReg);
+        fd.append("dni", r.dni);
+        fd.append("nombres", r.nom);
+        fd.append("sexo", r.sex);
+        fd.append("edad", r.eda);
+        fd.append("celular", r.cel);
+        fd.append("fundo", r.fun);
+        fd.append("area", r.are);
+        fd.append("cargo", r.car);
+        fd.append("fIngreso", r.fIng);
+        fd.append("tipoT", r.tipT);
+        fd.append("modulo_labo", r.modlab);
+        fd.append("variedad_fruta", r.varieds); // Corregido: r.varieds (coincide con el objeto del paso anterior)
+        fd.append("supervisor", r.sup);
+        fd.append("herramientas", r.herr);
+        fd.append("agua", r.agu);
+        fd.append("fruta", r.fru);
+        fd.append("faltas_respe", r.falt);
+        fd.append("regreso_traba", r.regre);
+        fd.append("sientehoy", r.sient);        // Asegúrate que en Apps Script recibas 'sientehoy' si lo necesitas
+        fd.append("problemas", r.prob);         // Corregido: r.prob
+        fd.append("observaciones", r.obs);
+
+        try {
+            // Nota: Usamos POST al API_URL definido
+            await fetch(API_URL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: fd 
+            });
+            await db.registros.update(r.id, { synchronized: 1 });
+            console.log("Sincronizado ID:", r.id);
+        } catch(e) { 
+            console.error("Error al sincronizar:", e); 
         }
     }
+}
 
     actualizarPadron();
     setInterval(enviarASheets, 30000);
