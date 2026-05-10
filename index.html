@@ -23,8 +23,8 @@
 
         .container { 
             background: white; 
-            width: 95%;
-            max-width: 850px;
+            width: 95%;           
+            max-width: 850px;     
             margin: 10px auto; 
             padding: 20px; 
             border-radius: 12px; 
@@ -71,7 +71,7 @@
         .btn-search { background: var(--verde); color: white; border: none; padding: 12px; margin-top: 8px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; }
         .btn-submit { background: var(--rojo); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
         
-        /* Estilo Botón Download App */
+        /* Botón Download APP */
         #btnInstall { 
             background: var(--naranja); 
             color: white; 
@@ -90,7 +90,6 @@
         .online { background: #C8E6C9; color: #2E7D32; border: 1px solid #2E7D32; }
         .offline { background: #FFCDD2; color: #C62828; border: 1px solid #C62828; }
 
-        /* Historial de Registros */
         .historial-container { margin-top: 25px; border-top: 2px solid #eee; padding-top: 15px; }
         .registro-item { 
             background: #f9f9f9; 
@@ -116,7 +115,7 @@
 <body>
 
 <div class="container">
-    <button id="btnInstall">📲 DESCARGAR APP DE ENCUESTAS</button>
+    <button id="btnInstall">📲 DOWNLOAD APP (INSTALAR)</button>
 
     <img src="FLYER BIENVENIDA FRUSAN.png" class="logo" alt="Logo">
     <h2>Registro de Encuestas - Campaña 2026</h2>
@@ -146,8 +145,10 @@
                 </div>
 
                 <div><label>Apellidos y nombres:</label><input type="text" id="nombres" readonly></div>
-                <div><label>Sexo:</label><input type="text" id="sexo" readonly></div>
-                <div><label>Edad:</label><input type="text" id="edad" readonly></div>
+                <div style="display:flex; gap:10px">
+                    <div style="flex:1"><label>Sexo:</label><input type="text" id="sexo" readonly></div>
+                    <div style="flex:1"><label>Edad:</label><input type="text" id="edad" readonly></div>
+                </div>
                 <div><label>Celular:</label><input type="text" id="celular" readonly></div>
                 <div><label>Fundo:</label><input type="text" id="fundo" readonly></div>
                 <div><label>Área:</label><input type="text" id="area" readonly></div>
@@ -263,32 +264,9 @@
                         <option value="Fruta mala">Fruta mala</option>
                     </select>
                 </div>
-                <div>
-                    <label>¿Faltas de respeto?:</label>
-                    <select id="faltas_resp" required>
-                        <option value="">Seleccione...</option>
-                        <option value="SI">SI</option>
-                        <option value="NO">NO</option>
-                    </select>
-                </div>
-                <div>
-                    <label>¿Regresarias mañana?:</label>
-                    <select id="regreso_trab" required>
-                        <option value="">Seleccione...</option>
-                        <option value="SI">SI</option>
-                        <option value="NO">NO</option>
-                    </select>
-                </div>
-                <div>
-                    <label>¿Cómo se siente hoy?:</label>
-                    <select id="siente_hoy" required>
-                        <option value="">Seleccione...</option>
-                        <option value="Muy motivado">Muy motivado</option>
-                        <option value="Cansado">Cansado</option>
-                        <option value="Molesto">Molesto</option>
-                        <option value="Desmotivado">Desmotivado</option>
-                    </select>
-                </div>
+                <div><label>¿Faltas de respeto?:</label><select id="faltas_resp" required><option value="">Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div>
+                <div><label>¿Regresarias mañana?:</label><select id="regreso_trab" required><option value="">Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div>
+                <div><label>¿Cómo se siente hoy?:</label><select id="siente_hoy" required><option value="">Seleccione...</option><option value="Muy motivado">Muy motivado</option><option value="Cansado">Cansado</option><option value="Molesto">Molesto</option><option value="Desmotivado">Desmotivado</option></select></div>
                 <div class="full-width">
                     <label>Problema más urgente:</label>
                     <select id="problemas" required>
@@ -317,7 +295,7 @@
     </form>
 
     <div class="historial-container">
-        <strong>Mis Registros Recientes:</strong>
+        <strong>Confirmación de Envío (Recientes):</strong>
         <div id="listaHistorial"></div>
     </div>
 </div>
@@ -332,7 +310,7 @@
         registros: '++id, synchronized'
     });
 
-    // --- LÓGICA DE INSTALACIÓN ---
+    // --- INSTALACIÓN ---
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
@@ -349,18 +327,27 @@
         }
     });
 
-    // --- ACTUALIZACIÓN DE INTERFAZ (HISTORIAL) ---
+    // --- HISTORIAL AUTO-LIMPIABLE ---
     async function cargarHistorial() {
+        // Obtenemos los últimos 5
         const registros = await db.registros.reverse().limit(5).toArray();
         const contenedor = document.getElementById('listaHistorial');
+        
         contenedor.innerHTML = registros.map(r => `
             <div class="registro-item">
                 <span>DNI: ${r.dni} - ${r.nom.substring(0, 15)}...</span>
                 <span class="badge ${r.synchronized ? 'bg-sync' : 'bg-pend'}">
-                    ${r.synchronized ? 'Sincronizado' : 'Pendiente (Offline)'}
+                    ${r.synchronized ? 'Sincronizado' : 'Pendiente'}
                 </span>
             </div>
-        `).join('') || '<p style="font-size:11px; color:#888;">No hay registros hoy.</p>';
+        `).join('') || '<p style="font-size:11px; color:#888;">Sin registros recientes.</p>';
+
+        // ELIMINACIÓN AUTOMÁTICA: Borrar registros sincronizados que tengan más de 24 horas o sean antiguos
+        const todos = await db.registros.where('synchronized').equals(1).toArray();
+        if (todos.length > 10) {
+            const idsABorrar = todos.slice(0, todos.length - 5).map(r => r.id);
+            await db.registros.bulkDelete(idsABorrar);
+        }
     }
 
     function actualizarIndicadorConexion() {
@@ -393,21 +380,7 @@
             document.getElementById('cargo').value = persona["CARGO"] || '';
             document.getElementById('fechaIngreso').value = persona["FECHA INGRESO"] || '';
             document.getElementById('tipoTrabajador').value = persona["TIPO"] || '';
-            alert("✅ Trabajador encontrado.");
-        } else { alert("❌ DNI no encontrado localmente."); }
-    }
-
-    async function actualizarPadron() {
-        if (!navigator.onLine) return;
-        try {
-            const res = await fetch(API_URL);
-            const data = await res.json();
-            if (data && data.length > 0) {
-                await db.personal.clear();
-                const dataClean = data.map(p => ({ ...p, DNI: String(p.DNI).trim() }));
-                await db.personal.bulkPut(dataClean);
-            }
-        } catch (e) { console.log("Error al actualizar padrón:", e); }
+        } else { alert("❌ DNI no encontrado."); }
     }
 
     document.getElementById('formEncuesta').onsubmit = async (e) => {
@@ -440,7 +413,7 @@
 
         await db.registros.add(registro);
         cargarHistorial();
-        alert(navigator.onLine ? "✅ Registro guardado y enviando..." : "⚠️ Guardado localmente (Sin internet).");
+        alert(navigator.onLine ? "✅ Enviando..." : "⚠️ Guardado (Modo Offline)");
         if (navigator.onLine) enviarASheets();
         document.getElementById('formEncuesta').reset();
     };
@@ -481,13 +454,11 @@
         }
     }
 
-    // Registro de Service Worker para PWA (necesario para el botón Install)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZSA9PiBzZWxmLnNraXBXYWl0aW5nKCkpOwpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZSA9PiBlLnJlc3BvbmRXaXRoKGZldGNoKGUucmVxdWVzdCkuY2F0Y2goKCkgPT4gbmV3IFJlc3BvbnNlKCIiKSkpKTs=');
     }
 
     actualizarIndicadorConexion();
-    actualizarPadron();
     setInterval(enviarASheets, 30000);
 </script>
 </body>
