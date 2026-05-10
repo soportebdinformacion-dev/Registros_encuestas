@@ -4,96 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agrícola Huarmey - Encuestas</title>
-<style>
-    :root { 
-        --rojo: #D32F2F; 
-        --verde: #2E7D32; 
-        --gris: #f4f4f4; 
-        --naranja: #EF6C00; 
-    }
-
-    body { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-        background: var(--gris); 
-        margin: 0; 
-        padding: 10px; 
-    }
-
-    .container { 
-        background: white; 
-        width: 95%;
-        max-width: 850px; /* Un poco más ancho para las 2 columnas en PC */
-        margin: 10px auto; 
-        padding: 20px; 
-        border-radius: 12px; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-        border-top: 6px solid var(--rojo); 
-        box-sizing: border-box;
-    }
-
-    .logo { 
-        display: block; 
-        margin: 0 auto 15px; 
-        max-width: 100%;   
-        height: auto;      
-        border-radius: 8px; 
-    }
-
-    h2 { color: var(--verde); text-align: center; font-size: 1.2rem; margin-bottom: 20px; }
-    
-    fieldset { 
-        border: 1px solid #ddd; 
-        border-radius: 8px; 
-        margin-bottom: 20px; 
-        padding: 15px; 
-    }
-
-    legend { font-weight: bold; color: var(--rojo); padding: 0 10px; font-size: 14px; }
-    label { display: block; margin-top: 12px; font-weight: 600; font-size: 13px; color: #333; }
-    
-    input, select, textarea { 
-        width: 100%; 
-        padding: 12px; 
-        margin-top: 5px; 
-        border: 1px solid #ccc; 
-        border-radius: 6px; 
-        box-sizing: border-box; 
-        font-size: 15px; 
-    }
-
-    input[readonly] { background: #f9f9f9; color: #666; }
-
-    /* CONTENEDOR FLEXIBLE PARA COLUMNAS */
-    .grid-container {
-        display: grid;
-        grid-template-columns: 1fr; /* 1 columna por defecto (Móvil) */
-        gap: 10px 20px;
-    }
-
-    .btn-search { background: var(--verde); color: white; border: none; padding: 14px; margin-top: 10px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; font-size: 14px; }
-    .btn-submit { background: var(--rojo); color: white; border: none; width: 100%; padding: 18px; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-
-    .status-bar { text-align: center; padding: 10px; margin-bottom: 15px; border-radius: 6px; font-weight: bold; font-size: 13px; }
-    .online { background: #C8E6C9; color: #2E7D32; border: 1px solid #2E7D32; }
-    .offline { background: #FFCDD2; color: #C62828; border: 1px solid #C62828; }
-
-    /* --- RESPONSIVE: AJUSTES PARA PC --- */
-    @media (min-width: 768px) {
-        body { padding: 30px; }
-        .container { padding: 40px; }
-        h2 { font-size: 1.5rem; }
+    <style>
+        :root { --rojo: #D32F2F; --verde: #2E7D32; --gris: #f4f4f4; --naranja: #EF6C00; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--gris); margin: 0; padding: 15px; }
+        .container { background: white; max-width: 500px; margin: auto; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 6px solid var(--rojo); }
+        /* Busca esto en la sección de CSS (dentro de <style>) */
+.logo { 
+    display: block; 
+    margin: 0 auto 15px; 
+    width: 100%;       /* Cambia el ancho fijo por 100% */
+    max-width: 100%;   
+    height: auto;      
+    border-radius: 8px; 
+}
+        h2 { color: var(--verde); text-align: center; font-size: 1.1rem; margin-bottom: 15px; }
+        fieldset { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; padding: 12px; }
+        legend { font-weight: bold; color: var(--rojo); padding: 0 8px; font-size: 13px; }
+        label { display: block; margin-top: 10px; font-weight: 600; font-size: 13px; }
+        input, select, textarea { width: 100%; padding: 10px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
+        input[readonly] { background: #f0f0f0; }
+        .btn-search { background: var(--verde); color: white; border: none; padding: 12px; margin-top: 8px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; }
+        .btn-submit { background: var(--rojo); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
         
-        /* En pantallas grandes, usamos 2 columnas */
-        .grid-container {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        /* El botón de búsqueda y el DNI ocupan toda la fila en su sección */
-        .full-width {
-            grid-column: span 2;
-        }
-    }
-</style>
+        /* Indicador de Conexión */
+        .status-bar { text-align: center; padding: 10px; margin-top: 15px; border-radius: 6px; font-weight: bold; font-size: 13px; transition: 0.3s; }
+        .online { background: #C8E6C9; color: #2E7D32; border: 1px solid #2E7D32; }
+        .offline { background: #FFCDD2; color: #C62828; border: 1px solid #C62828; }
+        
+        #seccionPreguntas, #contenedorRetorno { display: none; }
+    </style>
 </head>
 <body>
 
@@ -104,55 +43,177 @@
     <div id="connectionStatus" class="status-bar online">Detectando conexión...</div>
 
     <form id="formEncuesta">
-    <fieldset>
-        <legend>1. INFORMACIÓN PERSONAL</legend>
-        <div class="grid-container">
-            <div class="full-width">
-                <label>Tipo de registro:</label>
-                <select id="tipoRegistro" required>
-                    </select>
-            </div>
+        <fieldset>
+            <legend>1. INFORMACIÓN PERSONAL</legend>
+            <label>Tipo de registro:</label>
+            <select id="tipoRegistro" required>
+                <option value="">Seleccione usuario...</option>
+                <option value="JOSE CHAVEZ">JOSE CHAVEZ</option>
+                <option value="RIVALDO VALLES">RIVALDO VALLES</option>
+                <option value="ALEX RUFASTO">ALEX RUFASTO</option>
+                <option value="OSCAR BARREDA">OSCAR BARREDA</option>
+                <option value="PILAR MONJA">PILAR MONJA</option>
+            </select>
 
-            <div class="full-width">
-                <label>DNI:</label>
-                <input type="text" id="dni" placeholder="8 dígitos" maxlength="8" required>
-                <button type="button" class="btn-search" onclick="buscarDNI()">🔍 BUSCAR TRABAJADOR</button>
-            </div>
+            <label>DNI:</label>
+                <input type="text" id="dni" 
+                placeholder="Ingrese 8 dígitos" 
+                maxlength="8" 
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');" 
+                required>
+            <button type="button" class="btn-search" onclick="buscarDNI()">🔍 BUSCAR TRABAJADOR</button>
 
-            <div>
-                <label>Apellidos y nombres:</label>
-                <input type="text" id="nombres" readonly>
-            </div>
+            <label>Apellidos y nombres:</label>
+            <input type="text" id="nombres" readonly>
 
-            <div style="display: flex; gap: 10px;">
+            <div style="display:flex; gap:10px">
                 <div style="flex:1"><label>Sexo:</label><input type="text" id="sexo" readonly></div>
                 <div style="flex:1"><label>Edad:</label><input type="text" id="edad" readonly></div>
             </div>
 
-            <div><label>Celular:</label><input type="text" id="celular" readonly></div>
-            <div><label>Fundo:</label><input type="text" id="fundo" readonly></div>
-            <div><label>Área:</label><input type="text" id="area" readonly></div>
-            <div><label>Cargo:</label><input type="text" id="cargo" readonly></div>
-            <div><label>Fecha de ingreso:</label><input type="text" id="fechaIngreso" readonly></div>
-            <div><label>TIPO:</label><input type="text" id="tipoTrabajador" readonly></div>
-        </div>
-    </fieldset>
+            <label>Celular:</label>
+            <input type="text" id="celular" readonly>
+            <label>Fundo:</label>
+            <input type="text" id="fundo" readonly>
+            <label>Área:</label>
+            <input type="text" id="area" readonly>
+            <label>Cargo:</label>
+            <input type="text" id="cargo" readonly>
+            <label>Fecha de ingreso:</label>
+            <input type="text" id="fechaIngreso" readonly>
+            <label>TIPO:</label>
+            <input type="text" id="tipoTrabajador" readonly>
+        </fieldset>
 
-    <fieldset>
-        <legend>2. SUPERVISIÓN Y UBICACIÓN</legend>
-        <div class="grid-container">
-            <div>
-                <label>Supervisor a cargo:</label>
-                <select id="supervisor">
-                    </select>
-            </div>
-            <div>
-                <label>¿Qué Módulo labora?:</label>
-                <select id="modulo_lab">
-                    </select>
-            </div>
-        </div>
-    </fieldset>
+          <label>Supervisor a cargo:</label>
+                <select id="supervisor" onchange="toggleFechaRetorno()">
+                    <option value="">Seleccione...</option>
+                    <option value="Jhon">Jhon</option>
+                    <option value="Frank">Frank</option>
+                    <option value="Rony">rony</option>
+                </select>
+
+        <label>Qué Módulo labora?:</label>
+                <select id="modulo_lab" onchange="toggleFechaRetorno()">
+                    <option value="">Seleccione...</option>
+                    <option value=Módulo 1-Turno 1>Módulo 1-Turno 1</option>
+                    <option value=Módulo 1-Turno 2>Módulo 1-Turno 2</option>
+                    <option value=Módulo 1-Turno 3>Módulo 1-Turno 3</option>
+                    <option value=Módulo 1-Turno 4>Módulo 1-Turno 4</option>
+                    <option value=Módulo 1-Turno 5>Módulo 1-Turno 5</option>
+                    <option value=Módulo 2-Turno 1>Módulo 2-Turno 1</option>
+                    <option value=Módulo 2-Turno 2>Módulo 2-Turno 2</option>
+                    <option value=Módulo 2-Turno 3>Módulo 2-Turno 3</option>
+                    <option value=Módulo 2-Turno 4>Módulo 2-Turno 4</option>
+                    <option value=Módulo 2-Turno 5>Módulo 3-Turno 5</option>
+                    <option value=Módulo 3-Turno 1>Módulo 3-Turno 1</option>
+                    <option value=Módulo 3-Turno 2>Módulo 3-Turno 2</option>
+                    <option value=Módulo 3-Turno 3>Módulo 3-Turno 3</option>
+                    <option value=Módulo 3-Turno 4>Módulo 3-Turno 4</option>
+                    <option value=Módulo 3-Turno 5>Módulo 3-Turno 5</option>
+                    <option value=Módulo 4-Turno 1>Módulo 4-Turno 1</option>
+                    <option value=Módulo 4-Turno 2>Módulo 4-Turno 2</option>
+                    <option value=Módulo 4-Turno 3>Módulo 4-Turno 3</option>
+                    <option value=Módulo 4-Turno 4>Módulo 4-Turno 4</option>
+                    <option value=Módulo 4-Turno 5>Módulo 4-Turno 5</option>
+                    <option value=Módulo 5-Turno 1>Módulo 5-Turno 1</option>
+                    <option value=Módulo 5-Turno 2>Módulo 5-Turno 2</option>
+                    <option value=Módulo 5-Turno 3>Módulo 5-Turno 3</option>
+                    <option value=Módulo 5-Turno 4>Módulo 5-Turno 4</option>
+                    <option value=Módulo 5-Turno 5>Módulo 5-Turno 5</option>
+                    <option value=Módulo 6-Turno 1>Módulo 6-Turno 1</option>
+                    <option value=Módulo 6-Turno 2>Módulo 6-Turno 2</option>
+                    <option value=Módulo 6-Turno 3>Módulo 6-Turno 3</option>
+                    <option value=Módulo 6-Turno 4>Módulo 6-Turno 4</option>
+                    <option value=Módulo 6-Turno 5>Módulo 6-Turno 5</option>
+                    <option value=Módulo 7-Turno 1>Módulo 7-Turno 1</option>
+                    <option value=Módulo 7-Turno 2>Módulo 7-Turno 2</option>
+                    <option value=Módulo 7-Turno 3>Módulo 7-Turno 3</option>
+                    <option value=Módulo 7-Turno 4>Módulo 7-Turno 4</option>
+                    <option value=Módulo 7-Turno 5>Módulo 7-Turno 5</option>
+                    <option value=Módulo 8-Turno 1>Módulo 8-Turno 1</option>
+                    <option value=Módulo 8-Turno 2>Módulo 8-Turno 2</option>
+                    <option value=Módulo 8-Turno 3>Módulo 8-Turno 3</option>
+                    <option value=Módulo 8-Turno 4>Módulo 8-Turno 4</option>
+                    <option value=Módulo 8-Turno 5>Módulo 8-Turno 5</option>
+                    <option value=Módulo 9-Turno 1>Módulo 9-Turno 1</option>
+                    <option value=Módulo 9-Turno 2>Módulo 9-Turno 2</option>
+                    <option value=Módulo 9-Turno 3>Módulo 9-Turno 3</option>
+                    <option value=Módulo 9-Turno 4>Módulo 9-Turno 4</option>
+                    <option value=Módulo 9-Turno 5>Módulo 9-Turno 5</option>
+                </select>
+
+        <fieldset>
+            <legend>2. CONDICIONES DE TRABAJO</legend>
+            <label>¿Cuentas con las herramientas necesarias?:</label>
+            <select id="herramientas" required onchange="toggleSeccionPreguntas()">
+                <option value="">Seleccione...</option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+                <option value="Parcialmente">Parcialmente</option>
+            </select>
+
+            <label>¿Recibes agua necesaria?:</label>
+            <select id="agua" required onchange="toggleSeccionPreguntas()">
+                <option value="">Seleccione...</option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+                <option value="Tarde">Tarde</option>
+                 <option value="Insuficiente">Insuficiente</option>
+            </select>
+
+            <label>¿Tienes fruta disponible para trabajar?:</label>
+            <select id="fruta" required onchange="toggleSeccionPreguntas()">
+                <option value="">Seleccione...</option>
+                <option value="Buena cantidad">Buena cantidad</option>
+                <option value="Poca fruta">Poca fruta</option>
+                <option value="Muy poca fruta">Muy poca fruta</option>
+                 <option value="Fruta mala">Fruta mala</option>
+            </select>
+
+            <fieldset>
+            <legend>3. CAPORAL / LIDERAZGO</legend>
+            <label>¿Haz recibido gritos o faltas de respeto?:</label>
+            <select id="faltas_resp" required onchange="toggleSeccionPreguntas()">
+                <option value="">Seleccione...</option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+            </select>
+
+            <fieldset>
+            <legend>4. MOTIVACIÓN Y BIENESTAR</legend>
+            <label>¿Regresarias mañana a trabajar?:</label>
+            <select id="regreso_trab" required onchange="toggleSeccionPreguntas()">
+                <option value="">Seleccione...</option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+                <option value="NO SABE">NO SABE</option>
+            </select>
+
+            <label>¿Cómo se siente hoy trabajando aquí?:</label>
+            <select id="siente_hoy" required onchange="toggleSeccionPreguntas()">
+                <option value="">Seleccione...</option>
+                <option value="Cansado">Cansado</option>
+                <option value="Molesto">Molesto</option>
+                <option value="Desmotivado">Desmotivado</option>
+            </select>
+
+            <label>¿Qué problemas consideras más urgente?:</label>
+            <select id="problemas" required onchange="toggleSeccionPreguntas()">
+                <option value="">Seleccione...</option>
+                <option value="Agua">Agua</option>
+                <option value="Baños">Baños</option>
+                <option value="Herramientas">Herramientas</option>
+                <option value="Mal trato">Mal trato</option>
+                <option value="Pagos">Pagos</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Fruta mala">Fruta mala</option>
+                <option value="Otros (Detalle en OBSERVACIONES)">Otros (Detalle en OBSERVACIONES)</option>
+            </select>
+
+            <label>OBSERVACIONES:</label>
+            <textarea id="observaciones" rows="2"></textarea>
+        </fieldset>
 
         <button type="submit" class="btn-submit">GUARDAR Y ENVIAR</button>
     </form>
