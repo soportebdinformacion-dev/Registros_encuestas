@@ -192,6 +192,16 @@
                         </select>
                 </div>
             </div>
+
+                <div>
+                    <label>¿Varidad donde se encuentra?:</label>
+                    <select id="variedads" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Mágica">Mágica</option>
+                        <option value="Mega Erli">Mega Erli</option>
+                    </select>
+                </div>
+            
         </fieldset>
 
         <fieldset>
@@ -353,6 +363,7 @@
             fIng: document.getElementById('fechaIngreso').value,
             tipT: document.getElementById('tipoTrabajador').value,
             modlab: document.getElementById('modulo_lab').value,
+            varied: document.getElementById('variedads').value,
             sup: document.getElementById('supervisor').value,
             herr: document.getElementById('herramientas').value,
             agu: document.getElementById('agua').value,
@@ -388,6 +399,7 @@
             fd.append("fIngreso", r.fIng);
             fd.append("tipoT", r.tipT);
             fd.append("modulo_labo", r.modlab);
+            fd.append("varidads", r.varied);
             fd.append("supervisor", r.sup);
             fd.append("herramientas", r.herr);
             fd.append("agua", r.agu);
