@@ -350,8 +350,6 @@
 
     document.getElementById('formEncuesta').onsubmit = async (e) => {
     e.preventDefault();
-    
-    // CORRECCIÓN: Aseguramos que los IDs coincidan exactamente con el HTML
     const registro = {
         tipoReg: document.getElementById('tipoRegistro').value,
         dni: document.getElementById('dni').value,
@@ -364,17 +362,17 @@
         car: document.getElementById('cargo').value,
         fIng: document.getElementById('fechaIngreso').value,
         tipT: document.getElementById('tipoTrabajador').value,
-        modlab: document.getElementById('modulo_lab').value,
-        varieds: document.getElementById('variedads').value, // ID corregido de 'variedad_fruta' a 'variedads'
+        modlab: document.getElementById('modulo_lab').value, // Asegurado para Columna M
+        varieds: document.getElementById('variedads').value,
         sup: document.getElementById('supervisor').value,
         herr: document.getElementById('herramientas').value,
         agu: document.getElementById('agua').value,
         fru: document.getElementById('fruta').value,
         falt: document.getElementById('faltas_resp').value,
         regre: document.getElementById('regreso_trab').value,
-        sient: document.getElementById('siente_hoy').value,
-        prob: document.getElementById('problemas').value,
-        obs: document.getElementById('observaciones').value,
+        sient: document.getElementById('siente_hoy').value,  // Captura Columna U
+        prob: document.getElementById('problemas').value,    // Captura Columna V
+        obs: document.getElementById('observaciones').value, // Captura Columna W
         synchronized: 0
     };
 
@@ -387,7 +385,6 @@
 async function enviarASheets() {
     if(!navigator.onLine) return;
     const pendientes = await db.registros.where('synchronized').equals(0).toArray();
-    
     for(let r of pendientes) {
         const fd = new URLSearchParams();
         fd.append("tipoReg", r.tipoReg);
@@ -401,30 +398,22 @@ async function enviarASheets() {
         fd.append("cargo", r.car);
         fd.append("fIngreso", r.fIng);
         fd.append("tipoT", r.tipT);
-        fd.append("modulo_labo", r.modlab);
-        fd.append("variedad_fruta", r.varieds); // Corregido: r.varieds (coincide con el objeto del paso anterior)
-        fd.append("supervisor", r.sup);
-        fd.append("herramientas", r.herr);
-        fd.append("agua", r.agu);
-        fd.append("fruta", r.fru);
-        fd.append("faltas_respe", r.falt);
-        fd.append("regreso_traba", r.regre);
-        fd.append("sientehoy", r.sient);        // Asegúrate que en Apps Script recibas 'sientehoy' si lo necesitas
-        fd.append("problemas", r.prob);         // Corregido: r.prob
-        fd.append("observaciones", r.obs);
+        fd.append("modulo_labo", r.modlab);     // Columna M
+        fd.append("variedad_fruta", r.varieds); // Columna N
+        fd.append("supervisor", r.sup);         // Columna O
+        fd.append("herramientas", r.herr);      // Columna P
+        fd.append("agua", r.agu);               // Columna Q
+        fd.append("fruta", r.fru);              // Columna R
+        fd.append("faltas_respe", r.falt);      // Columna S
+        fd.append("regreso_traba", r.regre);    // Columna T
+        fd.append("sientehoy", r.sient);        // Columna U (¡Faltaba este!)
+        fd.append("problemas", r.prob);         // Columna V
+        fd.append("observaciones", r.obs);      // Columna W
 
         try {
-            // Nota: Usamos POST al API_URL definido
-            await fetch(API_URL, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: fd 
-            });
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
             await db.registros.update(r.id, { synchronized: 1 });
-            console.log("Sincronizado ID:", r.id);
-        } catch(e) { 
-            console.error("Error al sincronizar:", e); 
-        }
+        } catch(e) { console.error(e); }
     }
 }
 
