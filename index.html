@@ -5,39 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agrícola Huarmey - Encuestas</title>
     <style>
-        :root { --rojo: #D32F2F; --verde: #2E7D32; --gris: #f4f4f4; --naranja: #EF6C00; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--gris); margin: 0; padding: 15px; }
-        .container { background: white; max-width: 500px; margin: auto; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 6px solid var(--rojo); }
-        /* Busca esto en la sección de CSS (dentro de <style>) */
-.logo { 
-    display: block; 
-    margin: 0 auto 15px; 
-    width: 100%;       /* Cambia el ancho fijo por 100% */
-    max-width: 100%;   
-    height: auto;      
-    border-radius: 8px; 
-}
-        h2 { color: var(--verde); text-align: center; font-size: 1.1rem; margin-bottom: 15px; }
-        fieldset { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; padding: 12px; }
+        :root { 
+            --rojo: #D32F2F; 
+            --verde: #2E7D32; 
+            --gris: #f4f4f4; 
+            --naranja: #EF6C00; 
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--gris); 
+            margin: 0; 
+            padding: 10px; 
+        }
+
+        .container { 
+            background: white; 
+            width: 95%;           /* Ocupa casi todo el ancho en móviles */
+            max-width: 850px;     /* Ancho optimizado para 2 columnas en PC */
+            margin: 10px auto; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+            border-top: 6px solid var(--rojo); 
+            box-sizing: border-box; 
+        }
+
+        .logo { 
+            display: block; 
+            margin: 0 auto 15px; 
+            width: 100%;
+            max-width: 100%;   
+            height: auto;      
+            border-radius: 8px; 
+        }
+
+        h2 { color: var(--verde); text-align: center; font-size: 1.2rem; margin-bottom: 15px; }
+        
+        fieldset { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; padding: 15px; }
         legend { font-weight: bold; color: var(--rojo); padding: 0 8px; font-size: 13px; }
         label { display: block; margin-top: 10px; font-weight: 600; font-size: 13px; }
-        input, select, textarea { width: 100%; padding: 10px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
+        
+        input, select, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            margin-top: 4px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-size: 15px; 
+        }
+        
         input[readonly] { background: #f0f0f0; }
+
+        /* Contenedor flexible para el diseño de columnas */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr; /* 1 columna por defecto (Móvil) */
+            gap: 10px 20px;
+        }
+
+        .full-width { grid-column: 1 / -1; } /* Fuerza a ocupar todo el ancho */
+
         .btn-search { background: var(--verde); color: white; border: none; padding: 12px; margin-top: 8px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; }
         .btn-submit { background: var(--rojo); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
         
-        /* Indicador de Conexión */
         .status-bar { text-align: center; padding: 10px; margin-top: 15px; border-radius: 6px; font-weight: bold; font-size: 13px; transition: 0.3s; }
         .online { background: #C8E6C9; color: #2E7D32; border: 1px solid #2E7D32; }
         .offline { background: #FFCDD2; color: #C62828; border: 1px solid #C62828; }
-        
-        #seccionPreguntas, #contenedorRetorno { display: none; }
+
+        /* --- AJUSTES PARA PC (Pantallas mayores a 768px) --- */
+        @media (min-width: 768px) {
+            body { padding: 30px; }
+            .container { padding: 40px; }
+            .grid-container { grid-template-columns: 1fr 1fr; } /* 2 columnas en PC */
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-   <img src="FLYER BIENVENIDA FRUSAN.png" class="logo" alt="Logo">
+    <img src="FLYER BIENVENIDA FRUSAN.png" class="logo" alt="Logo">
     <h2>Registro de Encuestas - Campaña 2026</h2>
 
     <div id="connectionStatus" class="status-bar online">Detectando conexión...</div>
@@ -45,174 +93,130 @@
     <form id="formEncuesta">
         <fieldset>
             <legend>1. INFORMACIÓN PERSONAL</legend>
-            <label>Tipo de registro:</label>
-            <select id="tipoRegistro" required>
-                <option value="">Seleccione usuario...</option>
-                <option value="JOSE CHAVEZ">JOSE CHAVEZ</option>
-                <option value="RIVALDO VALLES">RIVALDO VALLES</option>
-                <option value="ALEX RUFASTO">ALEX RUFASTO</option>
-                <option value="OSCAR BARREDA">OSCAR BARREDA</option>
-                <option value="PILAR MONJA">PILAR MONJA</option>
-            </select>
+            <div class="grid-container">
+                <div class="full-width">
+                    <label>Tipo de registro:</label>
+                    <select id="tipoRegistro" required>
+                        <option value="">Seleccione usuario...</option>
+                        <option value="JOSE CHAVEZ">JOSE CHAVEZ</option>
+                        <option value="RIVALDO VALLES">RIVALDO VALLES</option>
+                        <option value="ALEX RUFASTO">ALEX RUFASTO</option>
+                        <option value="OSCAR BARREDA">OSCAR BARREDA</option>
+                        <option value="PILAR MONJA">PILAR MONJA</option>
+                    </select>
+                </div>
 
-            <label>DNI:</label>
-                <input type="text" id="dni" 
-                placeholder="Ingrese 8 dígitos" 
-                maxlength="8" 
-                oninput="this.value = this.value.replace(/[^0-9]/g, '');" 
-                required>
-            <button type="button" class="btn-search" onclick="buscarDNI()">🔍 BUSCAR TRABAJADOR</button>
+                <div class="full-width">
+                    <label>DNI:</label>
+                    <input type="text" id="dni" placeholder="Ingrese 8 dígitos" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                    <button type="button" class="btn-search" onclick="buscarDNI()">🔍 BUSCAR TRABAJADOR</button>
+                </div>
 
-            <label>Apellidos y nombres:</label>
-            <input type="text" id="nombres" readonly>
+                <div><label>Apellidos y nombres:</label><input type="text" id="nombres" readonly></div>
 
-            <div style="display:flex; gap:10px">
-                <div style="flex:1"><label>Sexo:</label><input type="text" id="sexo" readonly></div>
-                <div style="flex:1"><label>Edad:</label><input type="text" id="edad" readonly></div>
+                <div style="display:flex; gap:10px">
+                    <div style="flex:1"><label>Sexo:</label><input type="text" id="sexo" readonly></div>
+                    <div style="flex:1"><label>Edad:</label><input type="text" id="edad" readonly></div>
+                </div>
+
+                <div><label>Celular:</label><input type="text" id="celular" readonly></div>
+                <div><label>Fundo:</label><input type="text" id="fundo" readonly></div>
+                <div><label>Área:</label><input type="text" id="area" readonly></div>
+                <div><label>Cargo:</label><input type="text" id="cargo" readonly></div>
+                <div><label>Fecha de ingreso:</label><input type="text" id="fechaIngreso" readonly></div>
+                <div><label>TIPO:</label><input type="text" id="tipoTrabajador" readonly></div>
             </div>
-
-            <label>Celular:</label>
-            <input type="text" id="celular" readonly>
-            <label>Fundo:</label>
-            <input type="text" id="fundo" readonly>
-            <label>Área:</label>
-            <input type="text" id="area" readonly>
-            <label>Cargo:</label>
-            <input type="text" id="cargo" readonly>
-            <label>Fecha de ingreso:</label>
-            <input type="text" id="fechaIngreso" readonly>
-            <label>TIPO:</label>
-            <input type="text" id="tipoTrabajador" readonly>
         </fieldset>
 
-          <label>Supervisor a cargo:</label>
-                <select id="supervisor" onchange="toggleFechaRetorno()">
-                    <option value="">Seleccione...</option>
-                    <option value="Jhon">Jhon</option>
-                    <option value="Frank">Frank</option>
-                    <option value="Rony">rony</option>
-                </select>
-
-        <label>Qué Módulo labora?:</label>
-                <select id="modulo_lab" onchange="toggleFechaRetorno()">
-                    <option value="">Seleccione...</option>
-                    <option value=Módulo 1-Turno 1>Módulo 1-Turno 1</option>
-                    <option value=Módulo 1-Turno 2>Módulo 1-Turno 2</option>
-                    <option value=Módulo 1-Turno 3>Módulo 1-Turno 3</option>
-                    <option value=Módulo 1-Turno 4>Módulo 1-Turno 4</option>
-                    <option value=Módulo 1-Turno 5>Módulo 1-Turno 5</option>
-                    <option value=Módulo 2-Turno 1>Módulo 2-Turno 1</option>
-                    <option value=Módulo 2-Turno 2>Módulo 2-Turno 2</option>
-                    <option value=Módulo 2-Turno 3>Módulo 2-Turno 3</option>
-                    <option value=Módulo 2-Turno 4>Módulo 2-Turno 4</option>
-                    <option value=Módulo 2-Turno 5>Módulo 3-Turno 5</option>
-                    <option value=Módulo 3-Turno 1>Módulo 3-Turno 1</option>
-                    <option value=Módulo 3-Turno 2>Módulo 3-Turno 2</option>
-                    <option value=Módulo 3-Turno 3>Módulo 3-Turno 3</option>
-                    <option value=Módulo 3-Turno 4>Módulo 3-Turno 4</option>
-                    <option value=Módulo 3-Turno 5>Módulo 3-Turno 5</option>
-                    <option value=Módulo 4-Turno 1>Módulo 4-Turno 1</option>
-                    <option value=Módulo 4-Turno 2>Módulo 4-Turno 2</option>
-                    <option value=Módulo 4-Turno 3>Módulo 4-Turno 3</option>
-                    <option value=Módulo 4-Turno 4>Módulo 4-Turno 4</option>
-                    <option value=Módulo 4-Turno 5>Módulo 4-Turno 5</option>
-                    <option value=Módulo 5-Turno 1>Módulo 5-Turno 1</option>
-                    <option value=Módulo 5-Turno 2>Módulo 5-Turno 2</option>
-                    <option value=Módulo 5-Turno 3>Módulo 5-Turno 3</option>
-                    <option value=Módulo 5-Turno 4>Módulo 5-Turno 4</option>
-                    <option value=Módulo 5-Turno 5>Módulo 5-Turno 5</option>
-                    <option value=Módulo 6-Turno 1>Módulo 6-Turno 1</option>
-                    <option value=Módulo 6-Turno 2>Módulo 6-Turno 2</option>
-                    <option value=Módulo 6-Turno 3>Módulo 6-Turno 3</option>
-                    <option value=Módulo 6-Turno 4>Módulo 6-Turno 4</option>
-                    <option value=Módulo 6-Turno 5>Módulo 6-Turno 5</option>
-                    <option value=Módulo 7-Turno 1>Módulo 7-Turno 1</option>
-                    <option value=Módulo 7-Turno 2>Módulo 7-Turno 2</option>
-                    <option value=Módulo 7-Turno 3>Módulo 7-Turno 3</option>
-                    <option value=Módulo 7-Turno 4>Módulo 7-Turno 4</option>
-                    <option value=Módulo 7-Turno 5>Módulo 7-Turno 5</option>
-                    <option value=Módulo 8-Turno 1>Módulo 8-Turno 1</option>
-                    <option value=Módulo 8-Turno 2>Módulo 8-Turno 2</option>
-                    <option value=Módulo 8-Turno 3>Módulo 8-Turno 3</option>
-                    <option value=Módulo 8-Turno 4>Módulo 8-Turno 4</option>
-                    <option value=Módulo 8-Turno 5>Módulo 8-Turno 5</option>
-                    <option value=Módulo 9-Turno 1>Módulo 9-Turno 1</option>
-                    <option value=Módulo 9-Turno 2>Módulo 9-Turno 2</option>
-                    <option value=Módulo 9-Turno 3>Módulo 9-Turno 3</option>
-                    <option value=Módulo 9-Turno 4>Módulo 9-Turno 4</option>
-                    <option value=Módulo 9-Turno 5>Módulo 9-Turno 5</option>
-                </select>
+        <fieldset>
+            <legend>2. SUPERVISIÓN Y UBICACIÓN</legend>
+            <div class="grid-container">
+                <div>
+                    <label>Supervisor a cargo:</label>
+                    <select id="supervisor">
+                        <option value="">Seleccione...</option>
+                        <option value="Jhon">Jhon</option>
+                        <option value="Frank">Frank</option>
+                        <option value="Rony">rony</option>
+                    </select>
+                </div>
+                <div>
+                    <label>¿Qué Módulo labora?:</label>
+                    <select id="modulo_lab">
+                        <option value="">Seleccione...</option>
+                        <option value="Módulo 1-Turno 1">Módulo 1-Turno 1</option>
+                        <option value="Módulo 2-Turno 1">Módulo 2-Turno 1</option>
+                        </select>
+                </div>
+            </div>
+        </fieldset>
 
         <fieldset>
-            <legend>2. CONDICIONES DE TRABAJO</legend>
-            <label>¿Cuentas con las herramientas necesarias?:</label>
-            <select id="herramientas" required onchange="toggleSeccionPreguntas()">
-                <option value="">Seleccione...</option>
-                <option value="SI">SI</option>
-                <option value="NO">NO</option>
-                <option value="Parcialmente">Parcialmente</option>
-            </select>
-
-            <label>¿Recibes agua necesaria?:</label>
-            <select id="agua" required onchange="toggleSeccionPreguntas()">
-                <option value="">Seleccione...</option>
-                <option value="SI">SI</option>
-                <option value="NO">NO</option>
-                <option value="Tarde">Tarde</option>
-                 <option value="Insuficiente">Insuficiente</option>
-            </select>
-
-            <label>¿Tienes fruta disponible para trabajar?:</label>
-            <select id="fruta" required onchange="toggleSeccionPreguntas()">
-                <option value="">Seleccione...</option>
-                <option value="Buena cantidad">Buena cantidad</option>
-                <option value="Poca fruta">Poca fruta</option>
-                <option value="Muy poca fruta">Muy poca fruta</option>
-                 <option value="Fruta mala">Fruta mala</option>
-            </select>
-
-            <fieldset>
-            <legend>3. CAPORAL / LIDERAZGO</legend>
-            <label>¿Haz recibido gritos o faltas de respeto?:</label>
-            <select id="faltas_resp" required onchange="toggleSeccionPreguntas()">
-                <option value="">Seleccione...</option>
-                <option value="SI">SI</option>
-                <option value="NO">NO</option>
-            </select>
-
-            <fieldset>
-            <legend>4. MOTIVACIÓN Y BIENESTAR</legend>
-            <label>¿Regresarias mañana a trabajar?:</label>
-            <select id="regreso_trab" required onchange="toggleSeccionPreguntas()">
-                <option value="">Seleccione...</option>
-                <option value="SI">SI</option>
-                <option value="NO">NO</option>
-                <option value="NO SABE">NO SABE</option>
-            </select>
-
-            <label>¿Cómo se siente hoy trabajando aquí?:</label>
-            <select id="siente_hoy" required onchange="toggleSeccionPreguntas()">
-                <option value="">Seleccione...</option>
-                <option value="Cansado">Cansado</option>
-                <option value="Molesto">Molesto</option>
-                <option value="Desmotivado">Desmotivado</option>
-            </select>
-
-            <label>¿Qué problemas consideras más urgente?:</label>
-            <select id="problemas" required onchange="toggleSeccionPreguntas()">
-                <option value="">Seleccione...</option>
-                <option value="Agua">Agua</option>
-                <option value="Baños">Baños</option>
-                <option value="Herramientas">Herramientas</option>
-                <option value="Mal trato">Mal trato</option>
-                <option value="Pagos">Pagos</option>
-                <option value="Transporte">Transporte</option>
-                <option value="Fruta mala">Fruta mala</option>
-                <option value="Otros (Detalle en OBSERVACIONES)">Otros (Detalle en OBSERVACIONES)</option>
-            </select>
-
-            <label>OBSERVACIONES:</label>
-            <textarea id="observaciones" rows="2"></textarea>
+            <legend>3. CONDICIONES Y BIENESTAR</legend>
+            <div class="grid-container">
+                <div>
+                    <label>¿Herramientas necesarias?:</label>
+                    <select id="herramientas" required>
+                        <option value="">Seleccione...</option>
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+                <div>
+                    <label>¿Recibes agua necesaria?:</label>
+                    <select id="agua" required>
+                        <option value="">Seleccione...</option>
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+                <div>
+                    <label>¿Fruta disponible?:</label>
+                    <select id="fruta" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Buena cantidad">Buena cantidad</option>
+                        <option value="Poca fruta">Poca fruta</option>
+                    </select>
+                </div>
+                <div>
+                    <label>¿Faltas de respeto?:</label>
+                    <select id="faltas_resp" required>
+                        <option value="">Seleccione...</option>
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+                <div>
+                    <label>¿Regresarias mañana?:</label>
+                    <select id="regreso_trab" required>
+                        <option value="">Seleccione...</option>
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+                <div>
+                    <label>¿Cómo se siente hoy?:</label>
+                    <select id="siente_hoy" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Cansado">Cansado</option>
+                        <option value="Molesto">Molesto</option>
+                        <option value="Desmotivado">Desmotivado</option>
+                    </select>
+                </div>
+                <div class="full-width">
+                    <label>Problema más urgente:</label>
+                    <select id="problemas" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Agua">Agua</option>
+                        <option value="Mal trato">Mal trato</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+                <div class="full-width">
+                    <label>OBSERVACIONES:</label>
+                    <textarea id="observaciones" rows="2"></textarea>
+                </div>
+            </div>
         </fieldset>
 
         <button type="submit" class="btn-submit">GUARDAR Y ENVIAR</button>
@@ -221,7 +225,6 @@
 
 <script src="https://unpkg.com/dexie@3.2.0/dist/dexie.min.js"></script>
 <script>
-    // URL DE TU APPS SCRIPT
     const API_URL = 'https://script.google.com/macros/s/AKfycbylJ9rb_p02q54S0SoRLiYwms2IXefLe5mOV6RxwSXxcisLFjgCPGw_yPH70gWff-FA-g/exec';
 
     const db = new Dexie('BD_HUARMEY_ENCUESTA');
@@ -230,13 +233,12 @@
         registros: '++id, synchronized'
     });
 
-    // Función para actualizar el indicador de internet
     function actualizarIndicadorConexion() {
         const statusDiv = document.getElementById('connectionStatus');
         if (navigator.onLine) {
             statusDiv.innerText = "🟢 CONECTADO (En línea)";
             statusDiv.className = "status-bar online";
-            enviarASheets(); // Intenta enviar datos pendientes al recuperar conexión
+            enviarASheets();
         } else {
             statusDiv.innerText = "🔴 SIN CONEXIÓN (Modo Local)";
             statusDiv.className = "status-bar offline";
@@ -248,44 +250,24 @@
     actualizarIndicadorConexion();
 
     async function buscarDNI() {
-    const dniInput = document.getElementById('dni');
-    const dniVal = dniInput.value.trim();
-
-    // 1. Validar que tenga exactamente 8 dígitos
-    if (dniVal.length !== 8) {
-        alert("⚠️ Error de escritura: El DNI debe tener exactamente 8 números.");
-        dniInput.focus();
-        return;
+        const dniVal = document.getElementById('dni').value.trim();
+        if (dniVal.length !== 8) { alert("⚠️ El DNI debe tener 8 dígitos."); return; }
+        const persona = await db.personal.get(dniVal);
+        if (persona) {
+            document.getElementById('nombres').value = persona["APELLIDOS Y NOMBRES"] || '';
+            document.getElementById('sexo').value = persona["SEXO"] || '';
+            document.getElementById('edad').value = persona["EDAD"] || '';
+            document.getElementById('celular').value = persona["CELULAR"] || '';
+            document.getElementById('fundo').value = persona["FUNDO"] || '';
+            document.getElementById('area').value = persona["AREA"] || '';
+            document.getElementById('cargo').value = persona["CARGO"] || '';
+            document.getElementById('fechaIngreso').value = persona["FECHA INGRESO"] || '';
+            document.getElementById('tipoTrabajador').value = persona["TIPO"] || '';
+            alert("✅ Trabajador encontrado.");
+        } else {
+            alert("❌ DNI no encontrado localmente.");
+        }
     }
-
-    // 2. Validar que sea numérico (aunque oninput ya lo filtra, es doble seguridad)
-    if (!/^\d+$/.test(dniVal)) {
-        alert("⚠️ Error: Solo se permiten caracteres numéricos.");
-        return;
-    }
-
-    // 3. Realizar la búsqueda en la base de datos local (Dexie)
-    const persona = await db.personal.get(dniVal);
-
-    if (persona) {
-        document.getElementById('nombres').value = persona["APELLIDOS Y NOMBRES"] || '';
-        document.getElementById('sexo').value = persona["SEXO"] || '';
-        document.getElementById('edad').value = persona["EDAD"] || '';
-        document.getElementById('celular').value = persona["CELULAR"] || '';
-        document.getElementById('fundo').value = persona["FUNDO"] || '';
-        document.getElementById('area').value = persona["AREA"] || '';
-        document.getElementById('cargo').value = persona["CARGO"] || '';
-        document.getElementById('fechaIngreso').value = persona["FECHA INGRESO"] || '';
-        document.getElementById('tipoTrabajador').value = persona["TIPO"] || '';
-        
-        alert("✅ Trabajador encontrado con éxito.");
-    } else {
-        alert("❌ El DNI " + dniVal + " no se encuentra registrado en el padrón local.");
-        // Opcional: Limpiar campos si no se encuentra
-        document.getElementById('formEncuesta').reset();
-        document.getElementById('dni').value = dniVal; 
-    }
-}
 
     async function actualizarPadron() {
         if (!navigator.onLine) return;
@@ -328,28 +310,16 @@
         };
 
         await db.registros.add(registro);
-        
-        if (navigator.onLine) {
-            alert("✅ Registro guardado. Enviando a Google Sheets...");
-            enviarASheets();
-        } else {
-            alert("⚠️ Sin conexión. El registro se guardó localmente y se enviará automáticamente al recuperar internet.");
-        }
-        
+        alert(navigator.onLine ? "✅ Registro enviado." : "⚠️ Guardado localmente.");
+        if (navigator.onLine) enviarASheets();
         document.getElementById('formEncuesta').reset();
-        document.getElementById('seccionPreguntas').style.display = "none";
-        document.getElementById('contenedorRetorno').style.display = "none";
     };
 
-   async function enviarASheets() {
+    async function enviarASheets() {
         if(!navigator.onLine) return;
-        
         const pendientes = await db.registros.where('synchronized').equals(0).toArray();
-        if (pendientes.length === 0) return;
-
         for(let r of pendientes) {
             const fd = new URLSearchParams();
-            // Los nombres aquí deben ser IDENTICOS a los del Apps Script (ej: p.tipoReg)
             fd.append("tipoReg", r.tipoReg);
             fd.append("dni", r.dni);
             fd.append("nombres", r.nom);
@@ -368,22 +338,18 @@
             fd.append("fruta", r.fru);
             fd.append("faltas_respe", r.falt);
             fd.append("regreso_traba", r.regre);
+            fd.append("sientehoy", r.sient);
             fd.append("problemas", r.prob);
             fd.append("observaciones", r.obs);
 
             try {
-                // Se usa mode: 'no-cors' para evitar bloqueos con Google Scripts
                 await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
                 await db.registros.update(r.id, { synchronized: 1 });
-                console.log("Registro " + r.id + " sincronizado.");
-            } catch(e) { 
-                console.error("Error en sincronización:", e); 
-            }
+            } catch(e) { console.error(e); }
         }
     }
 
     actualizarPadron();
-    // Reintento automático de sincronización cada 30 segundos
     setInterval(enviarASheets, 30000);
 </script>
 </body>
