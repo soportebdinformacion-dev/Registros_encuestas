@@ -21,8 +21,8 @@
 
         .container { 
             background: white; 
-            width: 95%;           /* Ocupa casi todo el ancho en móviles */
-            max-width: 850px;     /* Ancho optimizado para 2 columnas en PC */
+            width: 95%;           
+            max-width: 850px;     
             margin: 10px auto; 
             padding: 20px; 
             border-radius: 12px; 
@@ -58,27 +58,29 @@
         
         input[readonly] { background: #f0f0f0; }
 
-        /* Contenedor flexible para el diseño de columnas */
         .grid-container {
             display: grid;
-            grid-template-columns: 1fr; /* 1 columna por defecto (Móvil) */
+            grid-template-columns: 1fr; 
             gap: 10px 20px;
         }
 
-        .full-width { grid-column: 1 / -1; } /* Fuerza a ocupar todo el ancho */
+        .full-width { grid-column: 1 / -1; } 
 
         .btn-search { background: var(--verde); color: white; border: none; padding: 12px; margin-top: 8px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; }
         .btn-submit { background: var(--rojo); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        
+        .btn-download { background: var(--naranja); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+
         .status-bar { text-align: center; padding: 10px; margin-top: 15px; border-radius: 6px; font-weight: bold; font-size: 13px; transition: 0.3s; }
         .online { background: #C8E6C9; color: #2E7D32; border: 1px solid #2E7D32; }
         .offline { background: #FFCDD2; color: #C62828; border: 1px solid #C62828; }
 
-        /* --- AJUSTES PARA PC (Pantallas mayores a 768px) --- */
+        #listaPendientes { margin-top: 15px; font-size: 12px; border: 1px solid #ddd; border-radius: 6px; padding: 10px; background: #fffde7; display: none; }
+        .pendientes-titulo { font-weight: bold; color: #856404; margin-bottom: 5px; display: block; }
+
         @media (min-width: 768px) {
             body { padding: 30px; }
             .container { padding: 40px; }
-            .grid-container { grid-template-columns: 1fr 1fr; } /* 2 columnas en PC */
+            .grid-container { grid-template-columns: 1fr 1fr; } 
         }
     </style>
 </head>
@@ -89,6 +91,11 @@
     <h2>Registro de Encuestas - Campaña 2026</h2>
 
     <div id="connectionStatus" class="status-bar online">Detectando conexión...</div>
+
+    <div id="listaPendientes">
+        <span class="pendientes-titulo">📂 Registros pendientes de sincronizar:</span>
+        <div id="itemsPendientes"></div>
+    </div>
 
     <form id="formEncuesta">
         <fieldset>
@@ -144,64 +151,63 @@
                     <label>¿Qué Módulo labora?:</label>
                     <select id="modulo_lab">
                         <option value="">Seleccione...</option>
-                    <option value="Módulo 1-Turno 1">Módulo 1-Turno 1</option>
-                    <option value="Módulo 1-Turno 2">Módulo 1-Turno 2</option>
-                    <option value="Módulo 1-Turno 3">Módulo 1-Turno 3</option>
-                    <option value="Módulo 1-Turno 4">Módulo 1-Turno 4</option>
-                    <option value="Módulo 1-Turno 5">Módulo 1-Turno 5</option>
-                    <option value="Módulo 2-Turno 1">Módulo 2-Turno 1</option>
-                    <option value="Módulo 2-Turno 2">Módulo 2-Turno 2</option>
-                    <option value="Módulo 2-Turno 3">Módulo 2-Turno 3</option>
-                    <option value="Módulo 2-Turno 4">Módulo 2-Turno 4</option>
-                    <option value="Módulo 2-Turno 5">Módulo 3-Turno 5</option>
-                    <option value="Módulo 3-Turno 1">Módulo 3-Turno 1</option>
-                    <option value="Módulo 3-Turno 2">Módulo 3-Turno 2</option>
-                    <option value="Módulo 3-Turno 3">Módulo 3-Turno 3</option>
-                    <option value="Módulo 3-Turno 4">Módulo 3-Turno 4</option>
-                    <option value="Módulo 3-Turno 5">Módulo 3-Turno 5</option>
-                    <option value="Módulo 4-Turno 1">Módulo 4-Turno 1</option>
-                    <option value="Módulo 4-Turno 2">Módulo 4-Turno 2</option>
-                    <option value="Módulo 4-Turno 3">Módulo 4-Turno 3</option>
-                    <option value="Módulo 4-Turno 4">Módulo 4-Turno 4</option>
-                    <option value="Módulo 4-Turno 5">Módulo 4-Turno 5</option>
-                    <option value="Módulo 5-Turno 1">Módulo 5-Turno 1</option>
-                    <option value="Módulo 5-Turno 2">Módulo 5-Turno 2</option>
-                    <option value="Módulo 5-Turno 3">Módulo 5-Turno 3</option>
-                    <option value="Módulo 5-Turno 4">Módulo 5-Turno 4</option>
-                    <option value="Módulo 5-Turno 5">Módulo 5-Turno 5</option>
-                    <option value="Módulo 6-Turno 1">Módulo 6-Turno 1</option>
-                    <option value="Módulo 6-Turno 2">Módulo 6-Turno 2</option>
-                    <option value="Módulo 6-Turno 3">Módulo 6-Turno 3</option>
-                    <option value="Módulo 6-Turno 4">Módulo 6-Turno 4</option>
-                    <option value="Módulo 6-Turno 5">Módulo 6-Turno 5</option>
-                    <option value="Módulo 7-Turno 1">Módulo 7-Turno 1</option>
-                    <option value="Módulo 7-Turno 2">Módulo 7-Turno 2</option>
-                    <option value="Módulo 7-Turno 3">Módulo 7-Turno 3</option>
-                    <option value="Módulo 7-Turno 4">Módulo 7-Turno 4</option>
-                    <option value="Módulo 7-Turno 5">Módulo 7-Turno 5</option>
-                    <option value="Módulo 8-Turno 1">Módulo 8-Turno 1</option>
-                    <option value="Módulo 8-Turno 2">Módulo 8-Turno 2</option>
-                    <option value="Módulo 8-Turno 3">Módulo 8-Turno 3</option>
-                    <option value="Módulo 8-Turno 4">Módulo 8-Turno 4</option>
-                    <option value="Módulo 8-Turno 5">Módulo 8-Turno 5</option>
-                    <option value="Módulo 9-Turno 1">Módulo 9-Turno 1</option>
-                    <option value="Módulo 9-Turno 2">Módulo 9-Turno 2</option>
-                    <option value="Módulo 9-Turno 3">Módulo 9-Turno 3</option>
-                    <option value="Módulo 9-Turno 4">Módulo 9-Turno 4</option>
-                    <option value="Módulo 9-Turno 5">Módulo 9-Turno 5</option>
-                        </select>
+                        <option value="Módulo 1-Turno 1">Módulo 1-Turno 1</option>
+                        <option value="Módulo 1-Turno 2">Módulo 1-Turno 2</option>
+                        <option value="Módulo 1-Turno 3">Módulo 1-Turno 3</option>
+                        <option value="Módulo 1-Turno 4">Módulo 1-Turno 4</option>
+                        <option value="Módulo 1-Turno 5">Módulo 1-Turno 5</option>
+                        <option value="Módulo 2-Turno 1">Módulo 2-Turno 1</option>
+                        <option value="Módulo 2-Turno 2">Módulo 2-Turno 2</option>
+                        <option value="Módulo 2-Turno 3">Módulo 2-Turno 3</option>
+                        <option value="Módulo 2-Turno 4">Módulo 2-Turno 4</option>
+                        <option value="Módulo 2-Turno 5">Módulo 2-Turno 5</option>
+                        <option value="Módulo 3-Turno 1">Módulo 3-Turno 1</option>
+                        <option value="Módulo 3-Turno 2">Módulo 3-Turno 2</option>
+                        <option value="Módulo 3-Turno 3">Módulo 3-Turno 3</option>
+                        <option value="Módulo 3-Turno 4">Módulo 3-Turno 4</option>
+                        <option value="Módulo 3-Turno 5">Módulo 3-Turno 5</option>
+                        <option value="Módulo 4-Turno 1">Módulo 4-Turno 1</option>
+                        <option value="Módulo 4-Turno 2">Módulo 4-Turno 2</option>
+                        <option value="Módulo 4-Turno 3">Módulo 4-Turno 3</option>
+                        <option value="Módulo 4-Turno 4">Módulo 4-Turno 4</option>
+                        <option value="Módulo 4-Turno 5">Módulo 4-Turno 5</option>
+                        <option value="Módulo 5-Turno 1">Módulo 5-Turno 1</option>
+                        <option value="Módulo 5-Turno 2">Módulo 5-Turno 2</option>
+                        <option value="Módulo 5-Turno 3">Módulo 5-Turno 3</option>
+                        <option value="Módulo 5-Turno 4">Módulo 5-Turno 4</option>
+                        <option value="Módulo 5-Turno 5">Módulo 5-Turno 5</option>
+                        <option value="Módulo 6-Turno 1">Módulo 6-Turno 1</option>
+                        <option value="Módulo 6-Turno 2">Módulo 6-Turno 2</option>
+                        <option value="Módulo 6-Turno 3">Módulo 6-Turno 3</option>
+                        <option value="Módulo 6-Turno 4">Módulo 6-Turno 4</option>
+                        <option value="Módulo 6-Turno 5">Módulo 6-Turno 5</option>
+                        <option value="Módulo 7-Turno 1">Módulo 7-Turno 1</option>
+                        <option value="Módulo 7-Turno 2">Módulo 7-Turno 2</option>
+                        <option value="Módulo 7-Turno 3">Módulo 7-Turno 3</option>
+                        <option value="Módulo 7-Turno 4">Módulo 7-Turno 4</option>
+                        <option value="Módulo 7-Turno 5">Módulo 7-Turno 5</option>
+                        <option value="Módulo 8-Turno 1">Módulo 8-Turno 1</option>
+                        <option value="Módulo 8-Turno 2">Módulo 8-Turno 2</option>
+                        <option value="Módulo 8-Turno 3">Módulo 8-Turno 3</option>
+                        <option value="Módulo 8-Turno 4">Módulo 8-Turno 4</option>
+                        <option value="Módulo 8-Turno 5">Módulo 8-Turno 5</option>
+                        <option value="Módulo 9-Turno 1">Módulo 9-Turno 1</option>
+                        <option value="Módulo 9-Turno 2">Módulo 9-Turno 2</option>
+                        <option value="Módulo 9-Turno 3">Módulo 9-Turno 3</option>
+                        <option value="Módulo 9-Turno 4">Módulo 9-Turno 4</option>
+                        <option value="Módulo 9-Turno 5">Módulo 9-Turno 5</option>
+                    </select>
                 </div>
             </div>
 
-                <div>
-                    <label>¿Varidad donde se encuentra?:</label>
-                    <select id="variedads" required>
-                        <option value="">Seleccione...</option>
-                        <option value="Mágica">Mágica</option>
-                        <option value="Mega Erli">Mega Erli</option>
-                    </select>
-                </div>
-            
+            <div>
+                <label>¿Varidad donde se encuentra?:</label>
+                <select id="variedads" required>
+                    <option value="">Seleccione...</option>
+                    <option value="Mágica">Mágica</option>
+                    <option value="Mega Erli">Mega Erli</option>
+                </select>
+            </div>
         </fieldset>
 
         <fieldset>
@@ -287,6 +293,7 @@
         </fieldset>
 
         <button type="submit" class="btn-submit">GUARDAR Y ENVIAR</button>
+        <button type="button" class="btn-download" onclick="descargarApp()">📥 DESCARGAR APLICACIÓN (encuesta.html)</button>
     </form>
 </div>
 
@@ -300,16 +307,39 @@
         registros: '++id, synchronized'
     });
 
-    function actualizarIndicadorConexion() {
+    async function actualizarIndicadorConexion() {
         const statusDiv = document.getElementById('connectionStatus');
         if (navigator.onLine) {
             statusDiv.innerText = "🟢 CONECTADO (En línea)";
             statusDiv.className = "status-bar online";
-            enviarASheets();
+            await enviarASheets();
         } else {
             statusDiv.innerText = "🔴 SIN CONEXIÓN (Modo Local)";
             statusDiv.className = "status-bar offline";
         }
+        actualizarVisorPendientes();
+    }
+
+    async function actualizarVisorPendientes() {
+        const pendientes = await db.registros.where('synchronized').equals(0).toArray();
+        const contenedor = document.getElementById('listaPendientes');
+        const listaItems = document.getElementById('itemsPendientes');
+        
+        if (pendientes.length > 0) {
+            contenedor.style.display = 'block';
+            listaItems.innerHTML = pendientes.map(r => `• DNI: ${r.dni} - ${r.nom}`).join('<br>');
+        } else {
+            contenedor.style.display = 'none';
+        }
+    }
+
+    function descargarApp() {
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'encuesta.html';
+        a.click();
     }
 
     window.addEventListener('online', actualizarIndicadorConexion);
@@ -363,7 +393,6 @@
         car: document.getElementById('cargo').value,
         fIng: document.getElementById('fechaIngreso').value,
         tipT: document.getElementById('tipoTrabajador').value,
-        // CORRECCIÓN: Captura el valor completo del selector de módulos
         modlab: document.getElementById('modulo_lab').value, 
         varieds: document.getElementById('variedads').value,
         sup: document.getElementById('supervisor').value,
@@ -379,8 +408,10 @@
     };
 
     await db.registros.add(registro);
+    actualizarVisorPendientes();
+    
     alert(navigator.onLine ? "✅ Registro enviado." : "⚠️ Guardado localmente.");
-    if (navigator.onLine) enviarASheets();
+    if (navigator.onLine) await enviarASheets();
     document.getElementById('formEncuesta').reset();
 };
 
@@ -400,23 +431,24 @@ async function enviarASheets() {
         fd.append("cargo", r.car);
         fd.append("fIngreso", r.fIng);
         fd.append("tipoT", r.tipT);
-        fd.append("modulo_labo", r.modlab);     // Columna M
-        fd.append("variedad_fruta", r.varieds); // Columna N
-        fd.append("supervisor", r.sup);         // Columna O
-        fd.append("herramientas", r.herr);      // Columna P
-        fd.append("agua", r.agu);               // Columna Q
-        fd.append("fruta", r.fru);              // Columna R
-        fd.append("faltas_respe", r.falt);      // Columna S
-        fd.append("regreso_traba", r.regre);    // Columna T
-        fd.append("sientehoy", r.sient);        // Columna U (Indispensable para evitar desplazamiento)
-        fd.append("problemas", r.prob);         // Columna V
-        fd.append("observaciones", r.obs);      // Columna W
+        fd.append("modulo_labo", r.modlab);     
+        fd.append("variedad_fruta", r.varieds); 
+        fd.append("supervisor", r.sup);         
+        fd.append("herramientas", r.herr);      
+        fd.append("agua", r.agu);               
+        fd.append("fruta", r.fru);              
+        fd.append("faltas_respe", r.falt);      
+        fd.append("regreso_traba", r.regre);    
+        fd.append("sientehoy", r.sient);        
+        fd.append("problemas", r.prob);         
+        fd.append("observaciones", r.obs);      
 
         try {
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
             await db.registros.update(r.id, { synchronized: 1 });
         } catch(e) { console.error("Error en envío:", e); }
     }
+    actualizarVisorPendientes();
 }
 
     actualizarPadron();
