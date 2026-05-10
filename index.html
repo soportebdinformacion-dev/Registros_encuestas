@@ -348,7 +348,7 @@
         } catch (e) { console.log("Error al actualizar padrón:", e); }
     }
 
-    document.getElementById('formEncuesta').onsubmit = async (e) => {
+   document.getElementById('formEncuesta').onsubmit = async (e) => {
     e.preventDefault();
     const registro = {
         tipoReg: document.getElementById('tipoRegistro').value,
@@ -362,7 +362,8 @@
         car: document.getElementById('cargo').value,
         fIng: document.getElementById('fechaIngreso').value,
         tipT: document.getElementById('tipoTrabajador').value,
-        modlab: document.getElementById('modulo_lab').value, // CORRECCIÓN: Captura el valor completo del selector de módulos
+        // CORRECCIÓN: Captura el valor completo del selector de módulos
+        modlab: document.getElementById('modulo_lab').value, 
         varieds: document.getElementById('variedads').value,
         sup: document.getElementById('supervisor').value,
         herr: document.getElementById('herramientas').value,
@@ -370,9 +371,9 @@
         fru: document.getElementById('fruta').value,
         falt: document.getElementById('faltas_resp').value,
         regre: document.getElementById('regreso_trab').value,
-        sient: document.getElementById('siente_hoy').value,  // Captura Columna U
-        prob: document.getElementById('problemas').value,    // Captura Columna V
-        obs: document.getElementById('observaciones').value, // Captura Columna W
+        sient: document.getElementById('siente_hoy').value, 
+        prob: document.getElementById('problemas').value,   
+        obs: document.getElementById('observaciones').value, 
         synchronized: 0
     };
 
@@ -398,7 +399,7 @@ async function enviarASheets() {
         fd.append("cargo", r.car);
         fd.append("fIngreso", r.fIng);
         fd.append("tipoT", r.tipT);
-        fd.append("modulo_labo", r.modlab)     // Envía el texto completo almacenado en modlab
+        fd.append("modulo_labo", r.modlab);     // Columna M
         fd.append("variedad_fruta", r.varieds); // Columna N
         fd.append("supervisor", r.sup);         // Columna O
         fd.append("herramientas", r.herr);      // Columna P
@@ -406,14 +407,14 @@ async function enviarASheets() {
         fd.append("fruta", r.fru);              // Columna R
         fd.append("faltas_respe", r.falt);      // Columna S
         fd.append("regreso_traba", r.regre);    // Columna T
-        fd.append("sientehoy", r.sient);        // Columna U (¡Faltaba este!)
+        fd.append("sientehoy", r.sient);        // Columna U (Indispensable para evitar desplazamiento)
         fd.append("problemas", r.prob);         // Columna V
         fd.append("observaciones", r.obs);      // Columna W
 
         try {
             await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
             await db.registros.update(r.id, { synchronized: 1 });
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error("Error en envío:", e); }
     }
 }
 
