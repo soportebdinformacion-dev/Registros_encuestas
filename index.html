@@ -362,7 +362,7 @@
         car: document.getElementById('cargo').value,
         fIng: document.getElementById('fechaIngreso').value,
         tipT: document.getElementById('tipoTrabajador').value,
-        modlab: document.getElementById('modulo_lab').value, // Asegurado para Columna M
+        modlab: document.getElementById('modulo_lab').value, // CORRECCIÓN: Captura el valor completo del selector de módulos
         varieds: document.getElementById('variedads').value,
         sup: document.getElementById('supervisor').value,
         herr: document.getElementById('herramientas').value,
@@ -398,7 +398,7 @@ async function enviarASheets() {
         fd.append("cargo", r.car);
         fd.append("fIngreso", r.fIng);
         fd.append("tipoT", r.tipT);
-        fd.append("modulo_labo", r.modlab);     // Columna M
+        fd.append("modulo_labo", r.modlab)     // Envía el texto completo almacenado en modlab
         fd.append("variedad_fruta", r.varieds); // Columna N
         fd.append("supervisor", r.sup);         // Columna O
         fd.append("herramientas", r.herr);      // Columna P
