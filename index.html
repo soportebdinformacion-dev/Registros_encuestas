@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agrícola Huarmey - Ausentismo</title>
+    <style>
+        :root { --rojo: #D32F2F; --verde: #2E7D32; --gris: #f4f4f4; --naranja: #EF6C00; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--gris); margin: 0; padding: 15px; }
+        .container { background: white; max-width: 500px; margin: auto; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 6px solid var(--rojo); }
+        /* Busca esto en la sección de CSS (dentro de <style>) */
+.logo { 
+    display: block; 
+    margin: 0 auto 15px; 
+    width: 100%;       /* Cambia el ancho fijo por 100% */
+    max-width: 100%;   
+    height: auto;      
+    border-radius: 8px; 
+}
+        h2 { color: var(--verde); text-align: center; font-size: 1.1rem; margin-bottom: 15px; }
+        fieldset { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; padding: 12px; }
+        legend { font-weight: bold; color: var(--rojo); padding: 0 8px; font-size: 13px; }
+        label { display: block; margin-top: 10px; font-weight: 600; font-size: 13px; }
+        input, select, textarea { width: 100%; padding: 10px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
+        input[readonly] { background: #f0f0f0; }
+        .btn-search { background: var(--verde); color: white; border: none; padding: 12px; margin-top: 8px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; }
+        .btn-submit { background: var(--rojo); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        
+        /* Indicador de Conexión */
+        .status-bar { text-align: center; padding: 10px; margin-top: 15px; border-radius: 6px; font-weight: bold; font-size: 13px; transition: 0.3s; }
+        .online { background: #C8E6C9; color: #2E7D32; border: 1px solid #2E7D32; }
+        .offline { background: #FFCDD2; color: #C62828; border: 1px solid #C62828; }
+        
+        #seccionPreguntas, #contenedorRetorno { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+   <img src="FLYER BIENVENIDA FRUSAN.png" class="logo" alt="Logo">
+    <h2>Registro de Ausentismo - Campaña 2026</h2>
+
+    <div id="connectionStatus" class="status-bar online">Detectando conexión...</div>
+
+    <form id="formAusentismo">
+        <fieldset>
+            <legend>1. INFORMACIÓN PERSONAL</legend>
+            <label>Tipo de registro:</label>
+            <select id="tipoRegistro" required>
+                <option value="">Seleccione usuario...</option>
+                <option value="JOSE CHAVEZ">JOSE CHAVEZ</option>
+                <option value="RIVALDO VALLES">RIVALDO VALLES</option>
+                <option value="ALEX RUFASTO">ALEX RUFASTO</option>
+                <option value="OSCAR BARREDA">OSCAR BARREDA</option>
+                <option value="PILAR MONJA">PILAR MONJA</option>
+            </select>
+
+            <label>DNI:</label>
+                <input type="text" id="dni" 
+                placeholder="Ingrese 8 dígitos" 
+                maxlength="8" 
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');" 
+                required>
+            <button type="button" class="btn-search" onclick="buscarDNI()">🔍 BUSCAR TRABAJADOR</button>
+
+            <label>Apellidos y nombres:</label>
+            <input type="text" id="nombres" readonly>
+
+            <div style="display:flex; gap:10px">
+                <div style="flex:1"><label>Sexo:</label><input type="text" id="sexo" readonly></div>
+                <div style="flex:1"><label>Edad:</label><input type="text" id="edad" readonly></div>
+            </div>
+
+            <label>Celular:</label>
+            <input type="text" id="celular" readonly>
+            <label>Fundo:</label>
+            <input type="text" id="fundo" readonly>
+            <label>Área:</label>
+            <input type="text" id="area" readonly>
+            <label>Cargo:</label>
+            <input type="text" id="cargo" readonly>
+            <label>Fecha de ingreso:</label>
+            <input type="text" id="fechaIngreso" readonly>
+            <label>TIPO:</label>
+            <input type="text" id="tipoTrabajador" readonly>
+        </fieldset>
+
+        <fieldset>
+            <legend>2. LLAMADAS DE ENCUESTA</legend>
+            <label>¿Se logró contactar?:</label>
+            <select id="contacto" required onchange="toggleSeccionPreguntas()">
+                <option value="">Seleccione...</option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+                <option value="NUMERO APAGADO">NUMERO APAGADO</option>
+                <option value="NUMERO EQUIVOCADO">NUMERO EQUIVOCADO</option>
+                <option value="NUMERO NO VALIDO">NUMERO NO VALIDO</option>
+                <option value="NO RESPONDE">NO RESPONDE</option>
+            </select>
+
+            <div id="seccionPreguntas">
+                <label>Fecha de llamada:</label>
+                <input type="date" id="fechaLlamada">
+                <label>Motivo de ausencia:</label>
+                <select id="motivo">
+                    <option value="">Seleccione...</option>
+                    <option value="Enfermedad (Detalle en OBSERVACIONES)">Enfermedad (Detalle en OBSERVACIONES)</option>
+                    <option value="Problemas personales">Problemas personales</option>
+                    <option value="Problemas familiares">Problemas familiares</option>
+                    <option value="Transporte (Especifique en OBSERVACIONES)">Transporte (Especifique en OBSERVACIONES)</option>
+                    <option value="Otro trabajo (Especifique en OBSERVACIONES)">Otro trabajo (Especifique en OBSERVACIONES)</option>
+                    <option value="Desmotivación (Especifique en OBSERVACIONES)">Desmotivación (Especifique en OBSERVACIONES)</option>
+                    <option value="Estudios (Especifique en OBSERVACIONES)">Estudios (Especifique en OBSERVACIONES)</option>
+                    <option value="Problemas con el Caporal/Supervisor (Escriba sus datos en OBSERVACIONES)">Problemas con el Caporal/Supervisor (Escriba sus datos en OBSERVACIONES)</option>
+                    <option value="Viaje">Viaje</option>
+                    <option value="Accidente">Accidente</option>
+                    <option value="Sacar tarjeta">Sacar tarjeta</option>
+                    <option value="Pagos (Especifique en OBSERVACIONES)">pagos (Especifique en OBSERVACIONES)</option>
+                    <option value="Horarios">Horarios</option>
+                    <option value="Alimentación (Especifique en OBSERVACIONES)">Alimentación (Especifique en OBSERVACIONES)</option>
+                    <option value="Campamento (Especifique en OBSERVACIONES)">Campamento (Especifique en OBSERVACIONES)</option>
+                    <option value="No desea continuar (Especifique en OBSERVACAIONES)">No desea continuar (Especifique en OBSERVACAIONES)</option>
+                    <option value="Otros (Especifique en OBSERVACIONES">Otros (Especifique en OBSERVACIONES</option>
+                </select>
+
+                <label>¿Vas a regresar?:</label>
+                <select id="regresa" onchange="toggleFechaRetorno()">
+                    <option value="">Seleccione...</option>
+                    <option value="SI">SI</option>
+                    <option value="NO">NO</option>
+                </select>
+
+                <div id="contenedorRetorno">
+                    <label>Fecha de retorno:</label>
+                    <input type="date" id="fechaRetornoInput">
+                </div>
+
+                <label>¿Qué tendria que mejorar la empresa para que regreses:</label>
+                <textarea id="mejora" rows="2"></textarea>
+            </div>
+
+            <label>OBSERVACIONES:</label>
+            <textarea id="observaciones" rows="2"></textarea>
+        </fieldset>
+
+        <button type="submit" class="btn-submit">GUARDAR Y ENVIAR</button>
+    </form>
+</div>
+
+<script src="https://unpkg.com/dexie@3.2.0/dist/dexie.min.js"></script>
+<script>
+    // URL DE TU APPS SCRIPT
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyKQEQblfbxhnGOxkrFLx6AzKGUuVNJalseD2-TEQteeLl7675gQdY_tymVzebC6r47gg/exec';
+
+    const db = new Dexie('BD_HUARMEY_FINAL');
+    db.version(1).stores({
+        personal: 'DNI',
+        registros: '++id, synchronized'
+    });
+
+    // Función para actualizar el indicador de internet
+    function actualizarIndicadorConexion() {
+        const statusDiv = document.getElementById('connectionStatus');
+        if (navigator.onLine) {
+            statusDiv.innerText = "🟢 CONECTADO (En línea)";
+            statusDiv.className = "status-bar online";
+            enviarASheets(); // Intenta enviar datos pendientes al recuperar conexión
+        } else {
+            statusDiv.innerText = "🔴 SIN CONEXIÓN (Modo Local)";
+            statusDiv.className = "status-bar offline";
+        }
+    }
+
+    window.addEventListener('online', actualizarIndicadorConexion);
+    window.addEventListener('offline', actualizarIndicadorConexion);
+    actualizarIndicadorConexion();
+
+    function toggleSeccionPreguntas() {
+        const val = document.getElementById('contacto').value;
+        document.getElementById('seccionPreguntas').style.display = (val === "SI") ? "block" : "none";
+    }
+
+    function toggleFechaRetorno() {
+        const val = document.getElementById('regresa').value;
+        document.getElementById('contenedorRetorno').style.display = (val === "SI") ? "block" : "none";
+    }
+
+    async function buscarDNI() {
+    const dniInput = document.getElementById('dni');
+    const dniVal = dniInput.value.trim();
+
+    // 1. Validar que tenga exactamente 8 dígitos
+    if (dniVal.length !== 8) {
+        alert("⚠️ Error de escritura: El DNI debe tener exactamente 8 números.");
+        dniInput.focus();
+        return;
+    }
+
+    // 2. Validar que sea numérico (aunque oninput ya lo filtra, es doble seguridad)
+    if (!/^\d+$/.test(dniVal)) {
+        alert("⚠️ Error: Solo se permiten caracteres numéricos.");
+        return;
+    }
+
+    // 3. Realizar la búsqueda en la base de datos local (Dexie)
+    const persona = await db.personal.get(dniVal);
+
+    if (persona) {
+        document.getElementById('nombres').value = persona["APELLIDOS Y NOMBRES"] || '';
+        document.getElementById('sexo').value = persona["SEXO"] || '';
+        document.getElementById('edad').value = persona["EDAD"] || '';
+        document.getElementById('celular').value = persona["CELULAR"] || '';
+        document.getElementById('fundo').value = persona["FUNDO"] || '';
+        document.getElementById('area').value = persona["AREA"] || '';
+        document.getElementById('cargo').value = persona["CARGO"] || '';
+        document.getElementById('fechaIngreso').value = persona["FECHA INGRESO"] || '';
+        document.getElementById('tipoTrabajador').value = persona["TIPO"] || '';
+        
+        alert("✅ Trabajador encontrado con éxito.");
+    } else {
+        alert("❌ El DNI " + dniVal + " no se encuentra registrado en el padrón local.");
+        // Opcional: Limpiar campos si no se encuentra
+        document.getElementById('formAusentismo').reset();
+        document.getElementById('dni').value = dniVal; 
+    }
+}
+
+    async function actualizarPadron() {
+        if (!navigator.onLine) return;
+        try {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            if (data && data.length > 0) {
+                await db.personal.clear();
+                const dataClean = data.map(p => ({ ...p, DNI: String(p.DNI).trim() }));
+                await db.personal.bulkPut(dataClean);
+            }
+        } catch (e) { console.log("Error al actualizar padrón:", e); }
+    }
+
+    document.getElementById('formAusentismo').onsubmit = async (e) => {
+        e.preventDefault();
+        const registro = {
+            tipoReg: document.getElementById('tipoRegistro').value,
+            dni: document.getElementById('dni').value,
+            nom: document.getElementById('nombres').value,
+            sex: document.getElementById('sexo').value,
+            eda: document.getElementById('edad').value,
+            cel: document.getElementById('celular').value,
+            fun: document.getElementById('fundo').value,
+            are: document.getElementById('area').value,
+            car: document.getElementById('cargo').value,
+            fIng: document.getElementById('fechaIngreso').value,
+            tipT: document.getElementById('tipoTrabajador').value,
+            cont: document.getElementById('contacto').value,
+            fLlam: document.getElementById('fechaLlamada').value,
+            mot: document.getElementById('motivo').value,
+            regre: document.getElementById('regresa').value,
+            fRet: document.getElementById('fechaRetornoInput').value,
+            mej: document.getElementById('mejora').value,
+            obs: document.getElementById('observaciones').value,
+            synchronized: 0
+        };
+
+        await db.registros.add(registro);
+        
+        if (navigator.onLine) {
+            alert("✅ Registro guardado. Enviando a Google Sheets...");
+            enviarASheets();
+        } else {
+            alert("⚠️ Sin conexión. El registro se guardó localmente y se enviará automáticamente al recuperar internet.");
+        }
+        
+        document.getElementById('formAusentismo').reset();
+        document.getElementById('seccionPreguntas').style.display = "none";
+        document.getElementById('contenedorRetorno').style.display = "none";
+    };
+
+    async function enviarASheets() {
+        if(!navigator.onLine) return;
+        
+        const pendientes = await db.registros.where('synchronized').equals(0).toArray();
+        if (pendientes.length === 0) return;
+
+        for(let r of pendientes) {
+            const fd = new URLSearchParams();
+            fd.append("tipoReg", r.tipoReg);
+            fd.append("dni", r.dni);
+            fd.append("nombres", r.nom);
+            fd.append("sexo", r.sex);
+            fd.append("edad", r.eda);
+            fd.append("celular", r.cel);
+            fd.append("fundo", r.fun);
+            fd.append("area", r.are);
+            fd.append("cargo", r.car);
+            fd.append("fIngreso", r.fIng);
+            fd.append("tipoT", r.tipT);
+            fd.append("contacto", r.cont);
+            fd.append("fLlamada", r.fLlam);
+            fd.append("motivo", r.mot);
+            fd.append("regresa", r.regre);
+            fd.append("fRetorno", r.fRet);
+            fd.append("mejora", r.mej);
+            fd.append("obs", r.obs);
+
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
+                await db.registros.update(r.id, { synchronized: 1 });
+                console.log("Registro " + r.id + " sincronizado correctamente.");
+            } catch(e) { 
+                console.log("Error al sincronizar registro " + r.id, e); 
+            }
+        }
+    }
+
+    actualizarPadron();
+    // Reintento automático de sincronización cada 30 segundos
+    setInterval(enviarASheets, 30000);
+</script>
+</body>
+</html>
