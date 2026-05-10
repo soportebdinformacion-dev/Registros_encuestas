@@ -222,9 +222,9 @@
 <script src="https://unpkg.com/dexie@3.2.0/dist/dexie.min.js"></script>
 <script>
     // URL DE TU APPS SCRIPT
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyKQEQblfbxhnGOxkrFLx6AzKGUuVNJalseD2-TEQteeLl7675gQdY_tymVzebC6r47gg/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyxdkx1gKV_tXQvAHZNndnRhRIm0GxdvsYF01NJ40HawsMttdIPXqbblsfXLDFHwHZAYg/exec';
 
-    const db = new Dexie('BD_HUARMEY_FINAL');
+    const db = new Dexie('BD_HUARMEY_ENCUESTA');
     db.version(1).stores({
         personal: 'DNI',
         registros: '++id, synchronized'
@@ -323,6 +323,7 @@
             regre: document.getElementById('regreso_trab').value,
             sient: document.getElementById('siente_hoy').value,
             prob: document.getElementById('problemas').value,
+            obs: document.getElementById('observaciones').value,
             synchronized: 0
         };
 
