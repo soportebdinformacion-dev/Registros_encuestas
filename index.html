@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agrícola Huarmey - Encuestas</title>
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkVuY3Vlc3RhcyBIdWFybWV5IiwKICAic2hvcnRfbmFtZSI6ICJFbmN1ZXN0YXMiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2Y0ZjRmNCIsCiAgInRoZW1lX2NvbG9yIjogIiNEMzJGMkYiLAogICJpY29ucyI6IFt7ICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsaXRpY29uLmNvbS81MTIvODAyLzgwMjI0My5wbmciLCAic2l6ZXMiOiAiNTEyeDUxMiIsICJ0eXBlIjogImltYWdlL3BuZyIgfV0KfQ==">
-    
     <style>
         :root { 
             --rojo: #D32F2F; 
@@ -23,8 +21,8 @@
 
         .container { 
             background: white; 
-            width: 95%;           
-            max-width: 850px;     
+            width: 95%;           /* Ocupa casi todo el ancho en móviles */
+            max-width: 850px;     /* Ancho optimizado para 2 columnas en PC */
             margin: 10px auto; 
             padding: 20px; 
             border-radius: 12px; 
@@ -60,63 +58,33 @@
         
         input[readonly] { background: #f0f0f0; }
 
+        /* Contenedor flexible para el diseño de columnas */
         .grid-container {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr; /* 1 columna por defecto (Móvil) */
             gap: 10px 20px;
         }
 
-        .full-width { grid-column: 1 / -1; }
+        .full-width { grid-column: 1 / -1; } /* Fuerza a ocupar todo el ancho */
 
         .btn-search { background: var(--verde); color: white; border: none; padding: 12px; margin-top: 8px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: bold; }
         .btn-submit { background: var(--rojo); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
         
-        /* Botón Download APP */
-        #btnInstall { 
-            background: var(--naranja); 
-            color: white; 
-            border: none; 
-            padding: 12px; 
-            border-radius: 8px; 
-            width: 100%; 
-            font-weight: bold; 
-            margin-bottom: 20px; 
-            display: none; 
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
         .status-bar { text-align: center; padding: 10px; margin-top: 15px; border-radius: 6px; font-weight: bold; font-size: 13px; transition: 0.3s; }
         .online { background: #C8E6C9; color: #2E7D32; border: 1px solid #2E7D32; }
         .offline { background: #FFCDD2; color: #C62828; border: 1px solid #C62828; }
 
-        .historial-container { margin-top: 25px; border-top: 2px solid #eee; padding-top: 15px; }
-        .registro-item { 
-            background: #f9f9f9; 
-            padding: 10px; 
-            border-left: 5px solid #ccc; 
-            margin-bottom: 8px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            font-size: 13px;
-        }
-        .badge { padding: 3px 8px; border-radius: 12px; color: white; font-size: 11px; font-weight: bold; }
-        .bg-pend { background: var(--naranja); }
-        .bg-sync { background: var(--verde); }
-
+        /* --- AJUSTES PARA PC (Pantallas mayores a 768px) --- */
         @media (min-width: 768px) {
             body { padding: 30px; }
             .container { padding: 40px; }
-            .grid-container { grid-template-columns: 1fr 1fr; }
+            .grid-container { grid-template-columns: 1fr 1fr; } /* 2 columnas en PC */
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <button id="btnInstall">📲 DOWNLOAD APP (INSTALAR)</button>
-
     <img src="FLYER BIENVENIDA FRUSAN.png" class="logo" alt="Logo">
     <h2>Registro de Encuestas - Campaña 2026</h2>
 
@@ -145,10 +113,12 @@
                 </div>
 
                 <div><label>Apellidos y nombres:</label><input type="text" id="nombres" readonly></div>
+
                 <div style="display:flex; gap:10px">
                     <div style="flex:1"><label>Sexo:</label><input type="text" id="sexo" readonly></div>
                     <div style="flex:1"><label>Edad:</label><input type="text" id="edad" readonly></div>
                 </div>
+
                 <div><label>Celular:</label><input type="text" id="celular" readonly></div>
                 <div><label>Fundo:</label><input type="text" id="fundo" readonly></div>
                 <div><label>Área:</label><input type="text" id="area" readonly></div>
@@ -174,53 +144,55 @@
                     <label>¿Qué Módulo labora?:</label>
                     <select id="modulo_lab">
                         <option value="">Seleccione...</option>
-                        <option value="Módulo 1-Turno 1">Módulo 1-Turno 1</option>
-                        <option value="Módulo 1-Turno 2">Módulo 1-Turno 2</option>
-                        <option value="Módulo 1-Turno 3">Módulo 1-Turno 3</option>
-                        <option value="Módulo 1-Turno 4">Módulo 1-Turno 4</option>
-                        <option value="Módulo 1-Turno 5">Módulo 1-Turno 5</option>
-                        <option value="Módulo 2-Turno 1">Módulo 2-Turno 1</option>
-                        <option value="Módulo 2-Turno 2">Módulo 2-Turno 2</option>
-                        <option value="Módulo 2-Turno 3">Módulo 2-Turno 3</option>
-                        <option value="Módulo 2-Turno 4">Módulo 2-Turno 4</option>
-                        <option value="Módulo 2-Turno 5">Módulo 3-Turno 5</option>
-                        <option value="Módulo 3-Turno 1">Módulo 3-Turno 1</option>
-                        <option value="Módulo 3-Turno 2">Módulo 3-Turno 2</option>
-                        <option value="Módulo 3-Turno 3">Módulo 3-Turno 3</option>
-                        <option value="Módulo 3-Turno 4">Módulo 3-Turno 4</option>
-                        <option value="Módulo 3-Turno 5">Módulo 3-Turno 5</option>
-                        <option value="Módulo 4-Turno 1">Módulo 4-Turno 1</option>
-                        <option value="Módulo 4-Turno 2">Módulo 4-Turno 2</option>
-                        <option value="Módulo 4-Turno 3">Módulo 4-Turno 3</option>
-                        <option value="Módulo 4-Turno 4">Módulo 4-Turno 4</option>
-                        <option value="Módulo 4-Turno 5">Módulo 4-Turno 5</option>
-                        <option value="Módulo 5-Turno 1">Módulo 5-Turno 1</option>
-                        <option value="Módulo 5-Turno 2">Módulo 5-Turno 2</option>
-                        <option value="Módulo 5-Turno 3">Módulo 5-Turno 3</option>
-                        <option value="Módulo 5-Turno 4">Módulo 5-Turno 4</option>
-                        <option value="Módulo 5-Turno 5">Módulo 5-Turno 5</option>
-                        <option value="Módulo 6-Turno 1">Módulo 6-Turno 1</option>
-                        <option value="Módulo 6-Turno 2">Módulo 6-Turno 2</option>
-                        <option value="Módulo 6-Turno 3">Módulo 6-Turno 3</option>
-                        <option value="Módulo 6-Turno 4">Módulo 6-Turno 4</option>
-                        <option value="Módulo 6-Turno 5">Módulo 6-Turno 5</option>
-                        <option value="Módulo 7-Turno 1">Módulo 7-Turno 1</option>
-                        <option value="Módulo 7-Turno 2">Módulo 7-Turno 2</option>
-                        <option value="Módulo 7-Turno 3">Módulo 7-Turno 3</option>
-                        <option value="Módulo 7-Turno 4">Módulo 7-Turno 4</option>
-                        <option value="Módulo 7-Turno 5">Módulo 7-Turno 5</option>
-                        <option value="Módulo 8-Turno 1">Módulo 8-Turno 1</option>
-                        <option value="Módulo 8-Turno 2">Módulo 8-Turno 2</option>
-                        <option value="Módulo 8-Turno 3">Módulo 8-Turno 3</option>
-                        <option value="Módulo 8-Turno 4">Módulo 8-Turno 4</option>
-                        <option value="Módulo 8-Turno 5">Módulo 8-Turno 5</option>
-                        <option value="Módulo 9-Turno 1">Módulo 9-Turno 1</option>
-                        <option value="Módulo 9-Turno 2">Módulo 9-Turno 2</option>
-                        <option value="Módulo 9-Turno 3">Módulo 9-Turno 3</option>
-                        <option value="Módulo 9-Turno 4">Módulo 9-Turno 4</option>
-                        <option value="Módulo 9-Turno 5">Módulo 9-Turno 5</option>
-                    </select>
+                    <option value="Módulo 1-Turno 1">Módulo 1-Turno 1</option>
+                    <option value="Módulo 1-Turno 2">Módulo 1-Turno 2</option>
+                    <option value="Módulo 1-Turno 3">Módulo 1-Turno 3</option>
+                    <option value="Módulo 1-Turno 4">Módulo 1-Turno 4</option>
+                    <option value="Módulo 1-Turno 5">Módulo 1-Turno 5</option>
+                    <option value="Módulo 2-Turno 1">Módulo 2-Turno 1</option>
+                    <option value="Módulo 2-Turno 2">Módulo 2-Turno 2</option>
+                    <option value="Módulo 2-Turno 3">Módulo 2-Turno 3</option>
+                    <option value="Módulo 2-Turno 4">Módulo 2-Turno 4</option>
+                    <option value="Módulo 2-Turno 5">Módulo 3-Turno 5</option>
+                    <option value="Módulo 3-Turno 1">Módulo 3-Turno 1</option>
+                    <option value="Módulo 3-Turno 2">Módulo 3-Turno 2</option>
+                    <option value="Módulo 3-Turno 3">Módulo 3-Turno 3</option>
+                    <option value="Módulo 3-Turno 4">Módulo 3-Turno 4</option>
+                    <option value="Módulo 3-Turno 5">Módulo 3-Turno 5</option>
+                    <option value="Módulo 4-Turno 1">Módulo 4-Turno 1</option>
+                    <option value="Módulo 4-Turno 2">Módulo 4-Turno 2</option>
+                    <option value="Módulo 4-Turno 3">Módulo 4-Turno 3</option>
+                    <option value="Módulo 4-Turno 4">Módulo 4-Turno 4</option>
+                    <option value="Módulo 4-Turno 5">Módulo 4-Turno 5</option>
+                    <option value="Módulo 5-Turno 1">Módulo 5-Turno 1</option>
+                    <option value="Módulo 5-Turno 2">Módulo 5-Turno 2</option>
+                    <option value="Módulo 5-Turno 3">Módulo 5-Turno 3</option>
+                    <option value="Módulo 5-Turno 4">Módulo 5-Turno 4</option>
+                    <option value="Módulo 5-Turno 5">Módulo 5-Turno 5</option>
+                    <option value="Módulo 6-Turno 1">Módulo 6-Turno 1</option>
+                    <option value="Módulo 6-Turno 2">Módulo 6-Turno 2</option>
+                    <option value="Módulo 6-Turno 3">Módulo 6-Turno 3</option>
+                    <option value="Módulo 6-Turno 4">Módulo 6-Turno 4</option>
+                    <option value="Módulo 6-Turno 5">Módulo 6-Turno 5</option>
+                    <option value="Módulo 7-Turno 1">Módulo 7-Turno 1</option>
+                    <option value="Módulo 7-Turno 2">Módulo 7-Turno 2</option>
+                    <option value="Módulo 7-Turno 3">Módulo 7-Turno 3</option>
+                    <option value="Módulo 7-Turno 4">Módulo 7-Turno 4</option>
+                    <option value="Módulo 7-Turno 5">Módulo 7-Turno 5</option>
+                    <option value="Módulo 8-Turno 1">Módulo 8-Turno 1</option>
+                    <option value="Módulo 8-Turno 2">Módulo 8-Turno 2</option>
+                    <option value="Módulo 8-Turno 3">Módulo 8-Turno 3</option>
+                    <option value="Módulo 8-Turno 4">Módulo 8-Turno 4</option>
+                    <option value="Módulo 8-Turno 5">Módulo 8-Turno 5</option>
+                    <option value="Módulo 9-Turno 1">Módulo 9-Turno 1</option>
+                    <option value="Módulo 9-Turno 2">Módulo 9-Turno 2</option>
+                    <option value="Módulo 9-Turno 3">Módulo 9-Turno 3</option>
+                    <option value="Módulo 9-Turno 4">Módulo 9-Turno 4</option>
+                    <option value="Módulo 9-Turno 5">Módulo 9-Turno 5</option>
+                        </select>
                 </div>
+            </div>
+
                 <div>
                     <label>¿Varidad donde se encuentra?:</label>
                     <select id="variedads" required>
@@ -229,7 +201,7 @@
                         <option value="Mega Erli">Mega Erli</option>
                     </select>
                 </div>
-            </div>
+            
         </fieldset>
 
         <fieldset>
@@ -264,9 +236,32 @@
                         <option value="Fruta mala">Fruta mala</option>
                     </select>
                 </div>
-                <div><label>¿Faltas de respeto?:</label><select id="faltas_resp" required><option value="">Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div>
-                <div><label>¿Regresarias mañana?:</label><select id="regreso_trab" required><option value="">Seleccione...</option><option value="SI">SI</option><option value="NO">NO</option></select></div>
-                <div><label>¿Cómo se siente hoy?:</label><select id="siente_hoy" required><option value="">Seleccione...</option><option value="Muy motivado">Muy motivado</option><option value="Cansado">Cansado</option><option value="Molesto">Molesto</option><option value="Desmotivado">Desmotivado</option></select></div>
+                <div>
+                    <label>¿Faltas de respeto?:</label>
+                    <select id="faltas_resp" required>
+                        <option value="">Seleccione...</option>
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+                <div>
+                    <label>¿Regresarias mañana?:</label>
+                    <select id="regreso_trab" required>
+                        <option value="">Seleccione...</option>
+                        <option value="SI">SI</option>
+                        <option value="NO">NO</option>
+                    </select>
+                </div>
+                <div>
+                    <label>¿Cómo se siente hoy?:</label>
+                    <select id="siente_hoy" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Muy motivado">Muy motivado</option>
+                        <option value="Cansado">Cansado</option>
+                        <option value="Molesto">Molesto</option>
+                        <option value="Desmotivado">Desmotivado</option>
+                    </select>
+                </div>
                 <div class="full-width">
                     <label>Problema más urgente:</label>
                     <select id="problemas" required>
@@ -293,11 +288,6 @@
 
         <button type="submit" class="btn-submit">GUARDAR Y ENVIAR</button>
     </form>
-
-    <div class="historial-container">
-        <strong>Confirmación de Envío (Recientes):</strong>
-        <div id="listaHistorial"></div>
-    </div>
 </div>
 
 <script src="https://unpkg.com/dexie@3.2.0/dist/dexie.min.js"></script>
@@ -310,46 +300,6 @@
         registros: '++id, synchronized'
     });
 
-    // --- INSTALACIÓN ---
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('btnInstall').style.display = 'block';
-    });
-
-    document.getElementById('btnInstall').addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') document.getElementById('btnInstall').style.display = 'none';
-            deferredPrompt = null;
-        }
-    });
-
-    // --- HISTORIAL AUTO-LIMPIABLE ---
-    async function cargarHistorial() {
-        // Obtenemos los últimos 5
-        const registros = await db.registros.reverse().limit(5).toArray();
-        const contenedor = document.getElementById('listaHistorial');
-        
-        contenedor.innerHTML = registros.map(r => `
-            <div class="registro-item">
-                <span>DNI: ${r.dni} - ${r.nom.substring(0, 15)}...</span>
-                <span class="badge ${r.synchronized ? 'bg-sync' : 'bg-pend'}">
-                    ${r.synchronized ? 'Sincronizado' : 'Pendiente'}
-                </span>
-            </div>
-        `).join('') || '<p style="font-size:11px; color:#888;">Sin registros recientes.</p>';
-
-        // ELIMINACIÓN AUTOMÁTICA: Borrar registros sincronizados que tengan más de 24 horas o sean antiguos
-        const todos = await db.registros.where('synchronized').equals(1).toArray();
-        if (todos.length > 10) {
-            const idsABorrar = todos.slice(0, todos.length - 5).map(r => r.id);
-            await db.registros.bulkDelete(idsABorrar);
-        }
-    }
-
     function actualizarIndicadorConexion() {
         const statusDiv = document.getElementById('connectionStatus');
         if (navigator.onLine) {
@@ -360,11 +310,11 @@
             statusDiv.innerText = "🔴 SIN CONEXIÓN (Modo Local)";
             statusDiv.className = "status-bar offline";
         }
-        cargarHistorial();
     }
 
     window.addEventListener('online', actualizarIndicadorConexion);
     window.addEventListener('offline', actualizarIndicadorConexion);
+    actualizarIndicadorConexion();
 
     async function buscarDNI() {
         const dniVal = document.getElementById('dni').value.trim();
@@ -380,85 +330,96 @@
             document.getElementById('cargo').value = persona["CARGO"] || '';
             document.getElementById('fechaIngreso').value = persona["FECHA INGRESO"] || '';
             document.getElementById('tipoTrabajador').value = persona["TIPO"] || '';
-        } else { alert("❌ DNI no encontrado."); }
-    }
-
-    document.getElementById('formEncuesta').onsubmit = async (e) => {
-        e.preventDefault();
-        const registro = {
-            tipoReg: document.getElementById('tipoRegistro').value,
-            dni: document.getElementById('dni').value,
-            nom: document.getElementById('nombres').value,
-            sex: document.getElementById('sexo').value,
-            eda: document.getElementById('edad').value,
-            cel: document.getElementById('celular').value,
-            fun: document.getElementById('fundo').value,
-            are: document.getElementById('area').value,
-            car: document.getElementById('cargo').value,
-            fIng: document.getElementById('fechaIngreso').value,
-            tipT: document.getElementById('tipoTrabajador').value,
-            modlab: document.getElementById('modulo_lab').value, 
-            varieds: document.getElementById('variedads').value,
-            sup: document.getElementById('supervisor').value,
-            herr: document.getElementById('herramientas').value,
-            agu: document.getElementById('agua').value,
-            fru: document.getElementById('fruta').value,
-            falt: document.getElementById('faltas_resp').value,
-            regre: document.getElementById('regreso_trab').value,
-            sient: document.getElementById('siente_hoy').value, 
-            prob: document.getElementById('problemas').value,   
-            obs: document.getElementById('observaciones').value, 
-            synchronized: 0
-        };
-
-        await db.registros.add(registro);
-        cargarHistorial();
-        alert(navigator.onLine ? "✅ Enviando..." : "⚠️ Guardado (Modo Offline)");
-        if (navigator.onLine) enviarASheets();
-        document.getElementById('formEncuesta').reset();
-    };
-
-    async function enviarASheets() {
-        if(!navigator.onLine) return;
-        const pendientes = await db.registros.where('synchronized').equals(0).toArray();
-        for(let r of pendientes) {
-            const fd = new URLSearchParams();
-            fd.append("tipoReg", r.tipoReg);
-            fd.append("dni", r.dni);
-            fd.append("nombres", r.nom);
-            fd.append("sexo", r.sex);
-            fd.append("edad", r.eda);
-            fd.append("celular", r.cel);
-            fd.append("fundo", r.fun);
-            fd.append("area", r.are);
-            fd.append("cargo", r.car);
-            fd.append("fIngreso", r.fIng);
-            fd.append("tipoT", r.tipT);
-            fd.append("modulo_labo", r.modlab);
-            fd.append("variedad_fruta", r.varieds);
-            fd.append("supervisor", r.sup);
-            fd.append("herramientas", r.herr);
-            fd.append("agua", r.agu);
-            fd.append("fruta", r.fru);
-            fd.append("faltas_respe", r.falt);
-            fd.append("regreso_traba", r.regre);
-            fd.append("sientehoy", r.sient);
-            fd.append("problemas", r.prob);
-            fd.append("observaciones", r.obs);
-
-            try {
-                await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
-                await db.registros.update(r.id, { synchronized: 1 });
-                cargarHistorial();
-            } catch(e) { console.error("Error envío:", e); }
+            alert("✅ Trabajador encontrado.");
+        } else {
+            alert("❌ DNI no encontrado localmente.");
         }
     }
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZSA9PiBzZWxmLnNraXBXYWl0aW5nKCkpOwpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZSA9PiBlLnJlc3BvbmRXaXRoKGZldGNoKGUucmVxdWVzdCkuY2F0Y2goKCkgPT4gbmV3IFJlc3BvbnNlKCIiKSkpKTs=');
+    async function actualizarPadron() {
+        if (!navigator.onLine) return;
+        try {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            if (data && data.length > 0) {
+                await db.personal.clear();
+                const dataClean = data.map(p => ({ ...p, DNI: String(p.DNI).trim() }));
+                await db.personal.bulkPut(dataClean);
+            }
+        } catch (e) { console.log("Error al actualizar padrón:", e); }
     }
 
-    actualizarIndicadorConexion();
+   document.getElementById('formEncuesta').onsubmit = async (e) => {
+    e.preventDefault();
+    const registro = {
+        tipoReg: document.getElementById('tipoRegistro').value,
+        dni: document.getElementById('dni').value,
+        nom: document.getElementById('nombres').value,
+        sex: document.getElementById('sexo').value,
+        eda: document.getElementById('edad').value,
+        cel: document.getElementById('celular').value,
+        fun: document.getElementById('fundo').value,
+        are: document.getElementById('area').value,
+        car: document.getElementById('cargo').value,
+        fIng: document.getElementById('fechaIngreso').value,
+        tipT: document.getElementById('tipoTrabajador').value,
+        // CORRECCIÓN: Captura el valor completo del selector de módulos
+        modlab: document.getElementById('modulo_lab').value, 
+        varieds: document.getElementById('variedads').value,
+        sup: document.getElementById('supervisor').value,
+        herr: document.getElementById('herramientas').value,
+        agu: document.getElementById('agua').value,
+        fru: document.getElementById('fruta').value,
+        falt: document.getElementById('faltas_resp').value,
+        regre: document.getElementById('regreso_trab').value,
+        sient: document.getElementById('siente_hoy').value, 
+        prob: document.getElementById('problemas').value,   
+        obs: document.getElementById('observaciones').value, 
+        synchronized: 0
+    };
+
+    await db.registros.add(registro);
+    alert(navigator.onLine ? "✅ Registro enviado." : "⚠️ Guardado localmente.");
+    if (navigator.onLine) enviarASheets();
+    document.getElementById('formEncuesta').reset();
+};
+
+async function enviarASheets() {
+    if(!navigator.onLine) return;
+    const pendientes = await db.registros.where('synchronized').equals(0).toArray();
+    for(let r of pendientes) {
+        const fd = new URLSearchParams();
+        fd.append("tipoReg", r.tipoReg);
+        fd.append("dni", r.dni);
+        fd.append("nombres", r.nom);
+        fd.append("sexo", r.sex);
+        fd.append("edad", r.eda);
+        fd.append("celular", r.cel);
+        fd.append("fundo", r.fun);
+        fd.append("area", r.are);
+        fd.append("cargo", r.car);
+        fd.append("fIngreso", r.fIng);
+        fd.append("tipoT", r.tipT);
+        fd.append("modulo_labo", r.modlab);     // Columna M
+        fd.append("variedad_fruta", r.varieds); // Columna N
+        fd.append("supervisor", r.sup);         // Columna O
+        fd.append("herramientas", r.herr);      // Columna P
+        fd.append("agua", r.agu);               // Columna Q
+        fd.append("fruta", r.fru);              // Columna R
+        fd.append("faltas_respe", r.falt);      // Columna S
+        fd.append("regreso_traba", r.regre);    // Columna T
+        fd.append("sientehoy", r.sient);        // Columna U (Indispensable para evitar desplazamiento)
+        fd.append("problemas", r.prob);         // Columna V
+        fd.append("observaciones", r.obs);      // Columna W
+
+        try {
+            await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
+            await db.registros.update(r.id, { synchronized: 1 });
+        } catch(e) { console.error("Error en envío:", e); }
+    }
+}
+
+    actualizarPadron();
     setInterval(enviarASheets, 30000);
 </script>
 </body>
