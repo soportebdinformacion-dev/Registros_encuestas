@@ -341,15 +341,15 @@
         document.getElementById('contenedorRetorno').style.display = "none";
     };
 
-    async function enviarASheets() {
+   async function enviarASheets() {
         if(!navigator.onLine) return;
         
         const pendientes = await db.registros.where('synchronized').equals(0).toArray();
         if (pendientes.length === 0) return;
 
         for(let r of pendientes) {
-            // Creamos el cuerpo de la petición asegurando que los nombres coincidan con el doPost del Apps Script
             const fd = new URLSearchParams();
+            // Los nombres aquí deben ser IDENTICOS a los del Apps Script (ej: p.tipoReg)
             fd.append("tipoReg", r.tipoReg);
             fd.append("dni", r.dni);
             fd.append("nombres", r.nom);
@@ -361,29 +361,23 @@
             fd.append("cargo", r.car);
             fd.append("fIngreso", r.fIng);
             fd.append("tipoT", r.tipT);
-            fd.append("modulo_labo", r.modlab); // Corregido: antes decía modulo_lab
+            fd.append("modulo_labo", r.modlab);
             fd.append("supervisor", r.sup);
             fd.append("herramientas", r.herr);
             fd.append("agua", r.agu);
             fd.append("fruta", r.fru);
-            fd.append("faltas_respe", r.falt); // Corregido: debe coincidir con p.faltas_respe en el script
-            fd.append("regreso_traba", r.regre); // Corregido: debe coincidir con p.regreso_traba en el script
-            fd.append("sientehoy", r.sient); // Corregido: debe coincidir con p.sientehoy en el script
+            fd.append("faltas_respe", r.falt);
+            fd.append("regreso_traba", r.regre);
             fd.append("problemas", r.prob);
             fd.append("observaciones", r.obs);
 
             try {
-                // Quitamos el 'no-cors' para evitar bloqueos de flujo y usamos el método POST estándar
-                await fetch(API_URL, { 
-                    method: 'POST', 
-                    mode: 'no-cors', // Mantenemos no-cors por ser Google Script, pero corregimos los nombres de parámetros
-                    body: fd 
-                });
-                
+                // Se usa mode: 'no-cors' para evitar bloqueos con Google Scripts
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
                 await db.registros.update(r.id, { synchronized: 1 });
-                console.log("✅ Registro " + r.id + " enviado.");
+                console.log("Registro " + r.id + " sincronizado.");
             } catch(e) { 
-                console.log("❌ Error al sincronizar registro " + r.id, e); 
+                console.error("Error en sincronización:", e); 
             }
         }
     }
