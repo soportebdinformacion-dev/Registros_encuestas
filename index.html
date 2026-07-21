@@ -123,15 +123,14 @@
 
                 <div style="display:flex; gap:10px">
                     <div style="flex:1"><label>Sexo:</label><input type="text" id="sexo" readonly></div>
-                    <div style="flex:1"><label>Edad:</label><input type="text" id="edad" readonly></div>
+                    <div style="flex:1"><label>Modalidad:</label><input type="text" id="modalidad" readonly></div>
                 </div>
 
                 <div><label>Celular:</label><input type="text" id="celular" readonly></div>
-                <div><label>Fundo:</label><input type="text" id="fundo" readonly></div>
-                <div><label>Área:</label><input type="text" id="area" readonly></div>
+                <div><label>Placa:</label><input type="text" id="placa" readonly></div>
+                <div><label>Origen:</label><input type="text" id="origen" readonly></div>
                 <div><label>Cargo:</label><input type="text" id="cargo" readonly></div>
-                <div><label>Fecha de ingreso:</label><input type="text" id="fechaIngreso" readonly></div>
-                <div><label>TIPO:</label><input type="text" id="tipoTrabajador" readonly></div>
+                <div><label>Histórico:</label><input type="text" id="historico" readonly></div>
             </div>
         </fieldset>
 
@@ -353,13 +352,12 @@
         if (persona) {
             document.getElementById('nombres').value = persona["APELLIDOS Y NOMBRES"] || '';
             document.getElementById('sexo').value = persona["SEXO"] || '';
-            document.getElementById('edad').value = persona["EDAD"] || '';
+            document.getElementById('modalidad').value = persona["MODALIDAD"] || '';
             document.getElementById('celular').value = persona["CELULAR"] || '';
-            document.getElementById('fundo').value = persona["FUNDO"] || '';
-            document.getElementById('area').value = persona["AREA"] || '';
+            document.getElementById('placa').value = persona["PLACA"] || '';
+            document.getElementById('origen').value = persona["ORIGEN"] || '';
             document.getElementById('cargo').value = persona["CARGO"] || '';
-            document.getElementById('fechaIngreso').value = persona["FECHA INGRESO"] || '';
-            document.getElementById('tipoTrabajador').value = persona["TIPO"] || '';
+            document.getElementById('historico').value = persona["HISTORICO"] || '';
             alert("✅ Trabajador encontrado.");
         } else {
             alert("❌ DNI no encontrado localmente.");
@@ -386,13 +384,12 @@
         dni: document.getElementById('dni').value,
         nom: document.getElementById('nombres').value,
         sex: document.getElementById('sexo').value,
-        eda: document.getElementById('edad').value,
+        eda: document.getElementById('modalidad').value,
         cel: document.getElementById('celular').value,
-        fun: document.getElementById('fundo').value,
-        are: document.getElementById('area').value,
+        fun: document.getElementById('placa').value,
+        are: document.getElementById('origen').value,
         car: document.getElementById('cargo').value,
-        fIng: document.getElementById('fechaIngreso').value,
-        tipT: document.getElementById('tipoTrabajador').value,
+        tipT: document.getElementById('historico').value,
         modlab: document.getElementById('modulo_lab').value, 
         varieds: document.getElementById('variedads').value,
         sup: document.getElementById('supervisor').value,
@@ -424,13 +421,12 @@ async function enviarASheets() {
         fd.append("dni", r.dni);
         fd.append("nombres", r.nom);
         fd.append("sexo", r.sex);
-        fd.append("edad", r.eda);
+        fd.append("modalidad", r.moda);
         fd.append("celular", r.cel);
-        fd.append("fundo", r.fun);
-        fd.append("area", r.are);
+        fd.append("placa", r.plac);
+        fd.append("origen", r.ori);
         fd.append("cargo", r.car);
-        fd.append("fIngreso", r.fIng);
-        fd.append("tipoT", r.tipT);
+        fd.append("historico", r.his);
         fd.append("modulo_labo", r.modlab);     
         fd.append("variedad_fruta", r.varieds); 
         fd.append("supervisor", r.sup);         
