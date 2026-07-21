@@ -115,7 +115,7 @@
 
                 <div class="full-width">
                     <label>DNI:</label>
-                    <input type="text" id="dni" placeholder="Ingrese 8 dígitos" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                    <input type="text" id="dni" placeholder="Ingrese 8 dígitos (ej. 00456235)" maxlength="8" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
                     <button type="button" class="btn-search" onclick="buscarDNI()">🔍 BUSCAR TRABAJADOR</button>
                 </div>
 
@@ -360,11 +360,19 @@
             return;
         }
 
-        // Rellenar con ceros a la izquierda hasta completar los 8 dígitos
-        dniVal = dniVal.padStart(8, '0');
-        dniInput.value = dniVal;
+        // 1. Normalizar entrada con ceros a la izquierda (8 dígitos)
+        let dniLimpio = dniVal.replace(/^0+/, '');
+        let dni8Digitos = dniLimpio.padStart(8, '0');
+        
+        // Actualizar visualmente la casilla
+        dniInput.value = dni8Digitos;
 
-        const persona = await db.personal.get(dniVal);
+        // 2. Búsqueda flexible: intentar con 8 dígitos y alternativamente sin ceros
+        let persona = await db.personal.get(dni8Digitos);
+        if (!persona && dniLimpio !== dni8Digitos) {
+            persona = await db.personal.get(dniLimpio);
+        }
+
         if (persona) {
             document.getElementById('nombres').value = persona["APELLIDOS Y NOMBRES"] || '';
             document.getElementById('sexo').value = persona["SEXO"] || '';
@@ -376,7 +384,7 @@
             document.getElementById('historico').value = persona["HISTORICO"] || '';
             alert("✅ Trabajador encontrado.");
         } else {
-            alert("❌ DNI " + dniVal + " no encontrado localmente.");
+            alert("❌ DNI " + dni8Digitos + " no encontrado localmente.");
         }
     }
 
@@ -387,11 +395,15 @@
             const data = await res.json();
             if (data && data.length > 0) {
                 await db.personal.clear();
-                // Forzar que todo DNI en la base local tenga los 8 dígitos completos
-                const dataClean = data.map(p => ({ 
-                    ...p, 
-                    DNI: String(p.DNI || '').trim().padStart(8, '0') 
-                }));
+                // Almacenar el DNI asegurando los 8 dígitos con ceros iniciales
+                const dataClean = data.map(p => {
+                    let raw = String(p.DNI || '').trim();
+                    let limpio = raw.replace(/^0+/, '');
+                    let dniFinal = (limpio.length > 0 && limpio.length <= 8 && !isNaN(limpio)) 
+                        ? limpio.padStart(8, '0') 
+                        : raw;
+                    return { ...p, DNI: dniFinal };
+                });
                 await db.personal.bulkPut(dataClean);
             }
         } catch (e) { console.log("Error al actualizar padrón:", e); }
@@ -399,7 +411,11 @@
 
     document.getElementById('formEncuesta').onsubmit = async (e) => {
         e.preventDefault();
-        const dniFormateado = document.getElementById('dni').value.trim().padStart(8, '0');
+        let rawInput = document.getElementById('dni').value.trim();
+        let dniLimpio = rawInput.replace(/^0+/, '');
+        const dniFormateado = (dniLimpio.length > 0 && dniLimpio.length <= 8 && !isNaN(dniLimpio)) 
+            ? dniLimpio.padStart(8, '0') 
+            : rawInput;
 
         const registro = {
             tipoReg: document.getElementById('tipoRegistro').value,
