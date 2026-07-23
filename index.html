@@ -139,7 +139,7 @@
             <div class="grid-container">
                 <div>
                     <label>Supervisor a cargo:</label>
-                    <select id="supervisor">
+                    <select id="supervisor" required>
                         <option value="">Seleccione...</option>
                         <option value="Frank Farroñan">Frank Farroñan</option>
                         <option value="Rony Cubas">Rony Cubas</option>
@@ -147,7 +147,7 @@
                 </div>
                 <div>
                     <label>¿Qué Módulo labora?:</label>
-                    <select id="modulo_lab">
+                    <select id="modulo_lab" required>
                         <option value="">Seleccione...</option>
                         <option value="Módulo 1-Turno 1">Módulo 1-Turno 1</option>
                         <option value="Módulo 1-Turno 2">Módulo 1-Turno 2</option>
@@ -196,16 +196,19 @@
                         <option value="Módulo 9-Turno 5">Módulo 9-Turno 5</option>
                     </select>
                 </div>
-            </div>
-
-            <div>
-                <label>¿Varidad donde se encuentra?:</label>
-                <select id="variedads" required>
-                    <option value="">Seleccione...</option>
-                    <option value="MAGICA 2024">MAGICA 2024</option>
-                    <option value="MAGICA 2025">MAGICA 2025</option>
-                    <option value="MEGAEARLY 2026">MEGAEARLY 2026</option>
-                </select>
+                <div>
+                    <label>¿Variedad donde se encuentra?:</label>
+                    <select id="variedad" required>
+                        <option value="">Seleccione...</option>
+                        <option value="MAGICA 2024">MAGICA 2024</option>
+                        <option value="MAGICA 2025">MAGICA 2025</option>
+                        <option value="MEGAEARLY 2026">MEGAEARLY 2026</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Fecha de Cosecha:</label>
+                    <input type="date" id="fechaCosecha" required>
+                </div>
             </div>
         </fieldset>
 
@@ -239,7 +242,6 @@
                         <option value="Poca fruta">Poca fruta</option>
                         <option value="Muy poca fruta">Muy poca fruta</option>
                         <option value="Fruta mala">Fruta mala</option>
-                        <option value="Fruta deshidratada">Fruta deshidratada</option>
                     </select>
                 </div>
                 <div>
@@ -282,7 +284,6 @@
                         <option value="Pagos">Pagos</option>
                         <option value="Transporte">Transporte</option>
                         <option value="Fruta mala">Fruta mala</option>
-                        <option value="Fruta deshidratada">Fruta deshidratada</option>
                         <option value="Otros (Detalle en OBSERVACIONES)">Otros (Detalle en OBSERVACIONES)</option>
                     </select>
                 </div>
@@ -300,12 +301,18 @@
 
 <script src="https://unpkg.com/dexie@3.2.0/dist/dexie.min.js"></script>
 <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzeAB6feeimXJ_HOvJFvtyiRuarejAqTXAa1WuZaG8z1POY7cgcQ8uUI-XHghgAeO_e9A/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyyxPq8nACOdYfrJ5asckIbUSY6G41elpT9uZY2r6YkEDZWZ03Sitl3_VeKv-zijLH98w/exec';
 
     const db = new Dexie('BD_HUARMEY_ENCUESTA');
-    db.version(1).stores({
+    db.version(2).stores({
         personal: 'DNI',
         registros: '++id, synchronized'
+    });
+
+    // Cargar la fecha de hoy por defecto en "Fecha de Cosecha"
+    document.addEventListener("DOMContentLoaded", () => {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('fechaCosecha').value = today;
     });
 
     async function actualizarIndicadorConexion() {
@@ -328,7 +335,7 @@
         
         if (pendientes.length > 0) {
             contenedor.style.display = 'block';
-            listaItems.innerHTML = pendientes.map(r => `• DNI: ${r.dni} - ${r.nom}`).join('<br>');
+            listaItems.innerHTML = pendientes.map(r => `• DNI: ${r.dni} - ${r.nom || 'Sin Nombre'}`).join('<br>');
         } else {
             contenedor.style.display = 'none';
         }
@@ -345,7 +352,6 @@
 
     window.addEventListener('online', actualizarIndicadorConexion);
     window.addEventListener('offline', actualizarIndicadorConexion);
-    actualizarIndicadorConexion();
 
     async function buscarDNI() {
         const dniInput = document.getElementById('dni');
@@ -362,28 +368,25 @@
             return;
         }
 
-        // 1. Normalizar entrada con ceros a la izquierda (8 dígitos)
         let dniLimpio = dniVal.replace(/^0+/, '');
         let dni8Digitos = dniLimpio.padStart(8, '0');
         
-        // Actualizar visualmente la casilla
         dniInput.value = dni8Digitos;
 
-        // 2. Búsqueda flexible: intentar con 8 dígitos y alternativamente sin ceros
         let persona = await db.personal.get(dni8Digitos);
         if (!persona && dniLimpio !== dni8Digitos) {
             persona = await db.personal.get(dniLimpio);
         }
 
         if (persona) {
-            document.getElementById('nombres').value = persona["APELLIDOS Y NOMBRES"] || '';
-            document.getElementById('sexo').value = persona["SEXO"] || '';
-            document.getElementById('modalidad').value = persona["MODALIDAD"] || '';
-            document.getElementById('celular').value = persona["CELULAR"] || '';
-            document.getElementById('placa').value = persona["PLACA"] || '';
-            document.getElementById('origen').value = persona["ORIGEN"] || '';
-            document.getElementById('cargo').value = persona["CARGO"] || '';
-            document.getElementById('historico').value = persona["HISTORICO"] || '';
+            document.getElementById('nombres').value = persona["APELLIDOS Y NOMBRES"] || persona["Nombres"] || '';
+            document.getElementById('sexo').value = persona["SEXO"] || persona["Sexo"] || '';
+            document.getElementById('modalidad').value = persona["MODALIDAD"] || persona["Modalidad"] || '';
+            document.getElementById('celular').value = persona["CELULAR"] || persona["Celular"] || '';
+            document.getElementById('placa').value = persona["PLACA"] || persona["Placa"] || '';
+            document.getElementById('origen').value = persona["ORIGEN"] || persona["Origen"] || '';
+            document.getElementById('cargo').value = persona["CARGO"] || persona["Cargo"] || '';
+            document.getElementById('historico').value = persona["HISTORICO"] || persona["Historico"] || '';
             alert("✅ Trabajador encontrado.");
         } else {
             alert("❌ DNI " + dni8Digitos + " no encontrado localmente.");
@@ -397,7 +400,6 @@
             const data = await res.json();
             if (data && data.length > 0) {
                 await db.personal.clear();
-                // Almacenar el DNI asegurando los 8 dígitos con ceros iniciales
                 const dataClean = data.map(p => {
                     let raw = String(p.DNI || '').trim();
                     let limpio = raw.replace(/^0+/, '');
@@ -413,82 +415,105 @@
 
     document.getElementById('formEncuesta').onsubmit = async (e) => {
         e.preventDefault();
-        let rawInput = document.getElementById('dni').value.trim();
-        let dniLimpio = rawInput.replace(/^0+/, '');
-        const dniFormateado = (dniLimpio.length > 0 && dniLimpio.length <= 8 && !isNaN(dniLimpio)) 
-            ? dniLimpio.padStart(8, '0') 
-            : rawInput;
+        try {
+            let rawInput = document.getElementById('dni').value.trim();
+            let dniLimpio = rawInput.replace(/^0+/, '');
+            const dniFormateado = (dniLimpio.length > 0 && dniLimpio.length <= 8 && !isNaN(dniLimpio)) 
+                ? dniLimpio.padStart(8, '0') 
+                : rawInput;
 
-        const registro = {
-            tipoReg: document.getElementById('tipoRegistro').value,
-            dni: dniFormateado,
-            nom: document.getElementById('nombres').value,
-            sex: document.getElementById('sexo').value,
-            eda: document.getElementById('modalidad').value,
-            cel: document.getElementById('celular').value,
-            fun: document.getElementById('placa').value,
-            are: document.getElementById('origen').value,
-            car: document.getElementById('cargo').value,
-            tipT: document.getElementById('historico').value,
-            modlab: document.getElementById('modulo_lab').value, 
-            varieds: document.getElementById('variedad_fruta').value,
-            sup: document.getElementById('supervisor').value,
-            herr: document.getElementById('herramientas').value,
-            agu: document.getElementById('agua').value,
-            fru: document.getElementById('fruta').value,
-            falt: document.getElementById('faltas_resp').value,
-            regre: document.getElementById('regreso_trab').value,
-            sient: document.getElementById('siente_hoy').value, 
-            prob: document.getElementById('problemas').value,   
-            obs: document.getElementById('observaciones').value, 
-            synchronized: 0
-        };
+            const registro = {
+                tipoReg: document.getElementById('tipoRegistro').value,
+                dni: dniFormateado,
+                nom: document.getElementById('nombres').value,
+                sex: document.getElementById('sexo').value,
+                eda: document.getElementById('modalidad').value,
+                cel: document.getElementById('celular').value,
+                fun: document.getElementById('placa').value,
+                are: document.getElementById('origen').value,
+                car: document.getElementById('cargo').value,
+                tipT: document.getElementById('historico').value,
+                modlab: document.getElementById('modulo_lab').value, 
+                varieds: document.getElementById('variedad').value,
+                fecCosecha: document.getElementById('fechaCosecha').value,
+                sup: document.getElementById('supervisor').value,
+                herr: document.getElementById('herramientas').value,
+                agu: document.getElementById('agua').value,
+                fru: document.getElementById('fruta').value,
+                falt: document.getElementById('faltas_resp').value,
+                regre: document.getElementById('regreso_trab').value,
+                sient: document.getElementById('siente_hoy').value, 
+                prob: document.getElementById('problemas').value,   
+                obs: document.getElementById('observaciones').value, 
+                synchronized: 0
+            };
 
-        await db.registros.add(registro);
-        actualizarVisorPendientes();
-        
-        alert(navigator.onLine ? "✅ Registro enviado." : "⚠️ Guardado localmente.");
-        if (navigator.onLine) await enviarASheets();
-        document.getElementById('formEncuesta').reset();
+            await db.registros.add(registro);
+            actualizarVisorPendientes();
+            
+            alert(navigator.onLine ? "✅ Registro guardado e iniciando envío..." : "⚠️ Guardado localmente sin conexión.");
+            
+            if (navigator.onLine) {
+                await enviarASheets();
+            }
+
+            document.getElementById('formEncuesta').reset();
+            document.getElementById('fechaCosecha').value = new Date().toISOString().split('T')[0];
+        } catch (err) {
+            alert("❌ Error al guardar los datos: " + err.message);
+            console.error(err);
+        }
     };
 
     async function enviarASheets() {
         if(!navigator.onLine) return;
         const pendientes = await db.registros.where('synchronized').equals(0).toArray();
         for(let r of pendientes) {
-            const fd = new URLSearchParams();
-            fd.append("tipoReg", r.tipoReg);
-            fd.append("dni", r.dni);
-            fd.append("nombres", r.nom);
-            fd.append("sexo", r.sex);
-            fd.append("modalidad", r.eda);
-            fd.append("celular", r.cel);
-            fd.append("placa", r.fun);
-            fd.append("origen", r.are);
-            fd.append("cargo", r.car);
-            fd.append("historico", r.tipT);
-            fd.append("modulo_labo", r.modlab);     
-            fd.append("variedad_fruta", r.varieds); 
-            fd.append("supervisor", r.sup);         
-            fd.append("herramientas", r.herr);      
-            fd.append("agua", r.agu);               
-            fd.append("fruta", r.fru);              
-            fd.append("faltas_respe", r.falt);      
-            fd.append("regreso_traba", r.regre);    
-            fd.append("sientehoy", r.sient);        
-            fd.append("problemas", r.prob);         
-            fd.append("observaciones", r.obs);      
+            const params = new URLSearchParams();
+            params.append("tipoReg", r.tipoReg || "");
+            params.append("dni", r.dni || "");
+            params.append("nombres", r.nom || "");
+            params.append("sexo", r.sex || "");
+            params.append("modalidad", r.eda || "");
+            params.append("celular", r.cel || "");
+            params.append("placa", r.fun || "");
+            params.append("origen", r.are || "");
+            params.append("cargo", r.car || "");
+            params.append("historico", r.tipT || "");
+            params.append("supervisor", r.sup || "");
+            params.append("modulo_labo", r.modlab || "");     
+            params.append("variedad_fruta", r.varieds || ""); 
+            params.append("fecha_cosecha", r.fecCosecha || "");
+            params.append("herramientas", r.herr || "");      
+            params.append("agua", r.agu || "");               
+            params.append("fruta", r.fru || "");              
+            params.append("faltas_respe", r.falt || "");      
+            params.append("regreso_traba", r.regre || "");    
+            params.append("sientehoy", r.sient || "");        
+            params.append("problemas", r.prob || "");         
+            params.append("observaciones", r.obs || "");      
 
             try {
-                await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: fd });
+                await fetch(API_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: params.toString() 
+                });
                 await db.registros.update(r.id, { synchronized: 1 });
-            } catch(e) { console.error("Error en envío:", e); }
+            } catch(e) { 
+                console.error("Error en envío:", e); 
+            }
         }
         actualizarVisorPendientes();
     }
 
+    // Inicialización al cargar la página
     actualizarPadron();
-    setInterval(enviarASheets, 30000);
+    actualizarIndicadorConexion();
+    setInterval(enviarASheets, 15000);
 </script>
 </body>
 </html>
